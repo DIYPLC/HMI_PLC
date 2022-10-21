@@ -47,3 +47,20 @@ Plot_GIU()
 FunctionTimeInterrypt1000ms() #Запустить прерывание каждые 1000мс
 GUI.root.mainloop()
 print("Конец программы в " + time.strftime("%H:%M:%S"))
+
+#  +---------+
+#  | GNU GPL |
+#  +---------+
+#  |
+#  |
+#  .= .-_-. =.
+# ((_/)o o(\_))
+#  `-'(. .)`-'
+#  |/| \_/ |\
+#  ( |     | )
+#  /"\_____/"\
+#  \__)   (__/
+# @COPYLEFT ALL WRONGS RESERVED :)
+# Author: VA
+# Contacts: DIY.PLC.314@gmail.com
+# License: GNU GPL v2
