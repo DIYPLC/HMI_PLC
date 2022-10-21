@@ -540,4 +540,19 @@ def Unit_test():
 if (__name__ == '__main__'):
     Unit_test()
 
-
+#  +---------+
+#  | GNU GPL |
+#  +---------+
+#  |
+#  |
+#  .= .-_-. =.
+# ((_/)o o(\_))
+#  `-'(. .)`-'
+#  |/| \_/ |\
+#  ( |     | )
+#  /"\_____/"\
+#  \__)   (__/
+# @COPYLEFT ALL WRONGS RESERVED :)
+# Author: VA
+# Contacts: DIY.PLC.314@gmail.com
+# License: GNU GPL v2
