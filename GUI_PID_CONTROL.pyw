@@ -326,3 +326,20 @@ EntryOP_value.set(Float32_to_string(Float32_value=DIPcontrol.HmiOP, Accuracy=2))
 CyclicTimeInterrypt()
 root.mainloop()
 PLC.Stop_TCP_client()
+
+#  +---------+
+#  | GNU GPL |
+#  +---------+
+#  |
+#  |
+#  .= .-_-. =.
+# ((_/)o o(\_))
+#  `-'(. .)`-'
+#  |/| \_/ |\
+#  ( |     | )
+#  /"\_____/"\
+#  \__)   (__/
+# @COPYLEFT ALL WRONGS RESERVED :)
+# Author: VA
+# Contacts: DIY.PLC.314@gmail.com
+# License: GNU GPL v2
