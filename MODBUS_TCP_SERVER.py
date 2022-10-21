@@ -186,3 +186,21 @@ def Task_MODBUS_TCP_SEREVER():
 if __name__ == "__main__":
     Debug_test_init_registers()
     Task_MODBUS_TCP_SEREVER()
+
+#  +---------+
+#  | GNU GPL |
+#  +---------+
+#  |
+#  |
+#  .= .-_-. =.
+# ((_/)o o(\_))
+#  `-'(. .)`-'
+#  |/| \_/ |\
+#  ( |     | )
+#  /"\_____/"\
+#  \__)   (__/
+# @COPYLEFT ALL WRONGS RESERVED :)
+# Author: VA
+# Contacts: DIY.PLC.314@gmail.com
+# License: GNU GPL v2
+    
