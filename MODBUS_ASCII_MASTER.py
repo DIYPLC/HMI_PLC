@@ -223,3 +223,20 @@ if(__name__ == "__main__"):
 //PLC: 3A    01    03    02    00    00    FA 0D 0A //Tx message ASCII HEX
 //LCR =  not(01 +  03 +  02 +  00 +  00)+1=FA
 """
+
+#  +---------+
+#  | GNU GPL |
+#  +---------+
+#  |
+#  |
+#  .= .-_-. =.
+# ((_/)o o(\_))
+#  `-'(. .)`-'
+#  |/| \_/ |\
+#  ( |     | )
+#  /"\_____/"\
+#  \__)   (__/
+# @COPYLEFT ALL WRONGS RESERVED :)
+# Author: VA
+# Contacts: DIY.PLC.314@gmail.com
+# License: GNU GPL v2
