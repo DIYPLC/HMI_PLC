@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 """
@@ -6,6 +7,7 @@ Modbus Master == TCP Client
 Modbus function 3  read holding registers uint16
 Modbus function 16 write multiple holding registers uint16
 Modbus function 6  write single register
+Modbus function 4  read one input register
 Learn more at: http://www.modbus.org/
 
 ********************************************************************************************************************
@@ -228,6 +230,56 @@ def MODBUS_TCP_client_write_multiple_holding_register_uint16(IP_address = '127.0
         Client_socket.close()
         Client_socket.__del__()
     return
+
+def MODBUS_TCP_client_read_input_register_int16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0):
+    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    try:
+        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Client_socket.connect((IP_address, TCP_port))
+        Tx_Transaction_ID = 1
+        Tx_Protocol_ID = 0
+        Tx_Message_length = 6
+        Tx_MODBUS_address = MODBUS_address
+        Tx_MODBUS_function = 4 #read_input_register
+        Tx_Register_address = Register_address
+        Tx_Register_count = 1
+        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
+        Client_socket.send(Tx_ADU)
+        Rx_ADU = Client_socket.recv(1500)
+        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Byte_count,Rx_Register_value) = struct.unpack(">HHHBBBh",Rx_ADU)
+        Client_socket.close()
+        Client_socket.__del__()
+        return Rx_Register_value
+    except:
+        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+        Client_socket.close()
+        Client_socket.__del__()
+        return 0
+
+def MODBUS_TCP_client_read_input_register_uint16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0):
+    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    try:
+        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Client_socket.connect((IP_address, TCP_port))
+        Tx_Transaction_ID = 1
+        Tx_Protocol_ID = 0
+        Tx_Message_length = 6
+        Tx_MODBUS_address = MODBUS_address
+        Tx_MODBUS_function = 4 #read_input_register
+        Tx_Register_address = Register_address
+        Tx_Register_count = 1
+        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
+        Client_socket.send(Tx_ADU)
+        Rx_ADU = Client_socket.recv(1500)
+        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Byte_count,Rx_Register_value) = struct.unpack(">HHHBBBH",Rx_ADU)
+        Client_socket.close()
+        Client_socket.__del__()
+        return Rx_Register_value
+    except:
+        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+        Client_socket.close()
+        Client_socket.__del__()
+        return 0
 
 class MODBUS_TCP_master(object):
 
@@ -556,3 +608,7 @@ if (__name__ == '__main__'):
 # Author: VA
 # Contacts: DIY.PLC.314@gmail.com
 # License: GNU GPL v2
+#
+# https://www.youtube.com/@DIY_PLC
+# https://github.com/DIYPLC
+
