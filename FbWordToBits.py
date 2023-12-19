@@ -65,41 +65,41 @@ class FbWordToBits():
         self.Out14 = bool(self.In & 0b0100000000000000)
         self.Out15 = bool(self.In & 0b1000000000000000)
         return
-    def Set_In(self, Value = 0):
-        self.In = Value
+    def Set_In(self, Value: int):
+        self.In = int(Value)
         return
-    def Get_Out0(self):
-        return self.Out0
-    def Get_Out1(self):
-        return self.Out1
-    def Get_Out2(self):
-        return self.Out2
-    def Get_Out3(self):
-        return self.Out3
-    def Get_Out4(self):
-        return self.Out4
-    def Get_Out5(self):
-        return self.Out5
-    def Get_Out6(self):
-        return self.Out6
-    def Get_Out7(self):
-        return self.Out7
-    def Get_Out8(self):
-        return self.Out8
-    def Get_Out9(self):
-        return self.Out9
-    def Get_Out10(self):
-        return self.Out10
-    def Get_Out11(self):
-        return self.Out11
-    def Get_Out12(self):
-        return self.Out12
-    def Get_Out13(self):
-        return self.Out13
-    def Get_Out14(self):
-        return self.Out14
-    def Get_Out15(self):
-        return self.Out15
+    def Get_Out0(self) -> bool:
+        return bool(self.Out0)
+    def Get_Out1(self) -> bool:
+        return bool(self.Out1)
+    def Get_Out2(self) -> bool:
+        return bool(self.Out2)
+    def Get_Out3(self) -> bool:
+        return bool(self.Out3)
+    def Get_Out4(self) -> bool:
+        return bool(self.Out4)
+    def Get_Out5(self) -> bool:
+        return bool(self.Out5)
+    def Get_Out6(self) -> bool:
+        return bool(self.Out6)
+    def Get_Out7(self) -> bool:
+        return bool(self.Out7)
+    def Get_Out8(self) -> bool:
+        return bool(self.Out8)
+    def Get_Out9(self) -> bool:
+        return bool(self.Out9)
+    def Get_Out10(self) -> bool:
+        return bool(self.Out10)
+    def Get_Out11(self) -> bool:
+        return bool(self.Out11)
+    def Get_Out12(self) -> bool:
+        return bool(self.Out12)
+    def Get_Out13(self) -> bool:
+        return bool(self.Out13)
+    def Get_Out14(self) -> bool:
+        return bool(self.Out14)
+    def Get_Out15(self) -> bool:
+        return bool(self.Out15)
 
 def Unit_test():
     print("Unit test start")

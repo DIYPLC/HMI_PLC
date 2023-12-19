@@ -82,56 +82,56 @@ class FbBitsToWord():
         if (self.In15):
             self.Out = (self.Out | 0b1000_0000_0000_0000)
         return
-    def Set_In0(self, Value = 0):
-        self.In0 = Value
+    def Set_In0(self, Value: bool):
+        self.In0 = bool(Value)
         return
-    def Set_In1(self, Value = 0):
-        self.In1 = Value
+    def Set_In1(self, Value: bool):
+        self.In1 = bool(Value)
         return
-    def Set_In2(self, Value = 0):
-        self.In2 = Value
+    def Set_In2(self, Value: bool):
+        self.In2 = bool(Value)
         return
-    def Set_In3(self, Value = 0):
-        self.In3 = Value
+    def Set_In3(self, Value: bool):
+        self.In3 = bool(Value)
         return
-    def Set_In4(self, Value = 0):
-        self.In4 = Value
+    def Set_In4(self, Value: bool):
+        self.In4 = bool(Value)
         return
-    def Set_In5(self, Value = 0):
-        self.In5 = Value
+    def Set_In5(self, Value: bool):
+        self.In5 = bool(Value)
         return
-    def Set_In6(self, Value = 0):
-        self.In6 = Value
+    def Set_In6(self, Value: bool):
+        self.In6 = bool(Value)
         return
-    def Set_In7(self, Value = 0):
-        self.In7 = Value
+    def Set_In7(self, Value: bool):
+        self.In7 = bool(Value)
         return
-    def Set_In8(self, Value = 0):
-        self.In8 = Value
+    def Set_In8(self, Value: bool):
+        self.In8 = bool(Value)
         return
-    def Set_In9(self, Value = 0):
-        self.In9 = Value
+    def Set_In9(self, Value: bool):
+        self.In9 = bool(Value)
         return
-    def Set_In10(self, Value = 0):
-        self.In10 = Value
+    def Set_In10(self, Value: bool):
+        self.In10 = bool(Value)
         return
-    def Set_In11(self, Value = 0):
-        self.In11 = Value
+    def Set_In11(self, Value: bool):
+        self.In11 = bool(Value)
         return
-    def Set_In12(self, Value = 0):
-        self.In12 = Value
+    def Set_In12(self, Value: bool):
+        self.In12 = bool(Value)
         return
-    def Set_In13(self, Value = 0):
-        self.In13 = Value
+    def Set_In13(self, Value: bool):
+        self.In13 = bool(Value)
         return
-    def Set_In14(self, Value = 0):
-        self.In14 = Value
+    def Set_In14(self, Value: bool):
+        self.In14 = bool(Value)
         return
-    def Set_In15(self, Value = 0):
-        self.In15 = Value
+    def Set_In15(self, Value: bool):
+        self.In15 = bool(Value)
         return
-    def Get_Out(self):
-        return self.Out
+    def Get_Out(self) -> int:
+        return int(self.Out)
 
 def Unit_test():
     print("Unit test start")
