@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 # Преобразование 16 бит в слово.
@@ -27,27 +27,27 @@
 class FbBitsToWord():
     def __init__(self): #Auto init VAR
         #Входные переменные, сохраняемые.
-        self.In0 = False
-        self.In1 = False
-        self.In2 = False
-        self.In3 = False
-        self.In4 = False
-        self.In5 = False
-        self.In6 = False
-        self.In7 = False
-        self.In8 = False
-        self.In9 = False
-        self.In10 = False
-        self.In11 = False
-        self.In12 = False
-        self.In13 = False
-        self.In14 = False
-        self.In15 = False
+        self.In0 :bool = False
+        self.In1 :bool = False
+        self.In2 :bool = False
+        self.In3 :bool = False
+        self.In4 :bool = False
+        self.In5 :bool = False
+        self.In6 :bool = False
+        self.In7 :bool = False
+        self.In8 :bool = False
+        self.In9 :bool = False
+        self.In10 :bool = False
+        self.In11 :bool = False
+        self.In12 :bool = False
+        self.In13 :bool = False
+        self.In14 :bool = False
+        self.In15 :bool = False
         #Выходные переменные, сохраняемые.
-        self.Out = 0
+        self.Out :int = 0
         #Внутренние переменные, сохраняемые.
         return
-    def Run(self):
+    def Run(self) -> None:
         self.Out = 0
         if (self.In0):
             self.Out = (self.Out | 0b0000_0000_0000_0001)
@@ -82,58 +82,58 @@ class FbBitsToWord():
         if (self.In15):
             self.Out = (self.Out | 0b1000_0000_0000_0000)
         return
-    def Set_In0(self, Value: bool):
+    def Set_In0(self, Value: bool) -> None:
         self.In0 = bool(Value)
         return
-    def Set_In1(self, Value: bool):
+    def Set_In1(self, Value: bool) -> None:
         self.In1 = bool(Value)
         return
-    def Set_In2(self, Value: bool):
+    def Set_In2(self, Value: bool) -> None:
         self.In2 = bool(Value)
         return
-    def Set_In3(self, Value: bool):
+    def Set_In3(self, Value: bool) -> None:
         self.In3 = bool(Value)
         return
-    def Set_In4(self, Value: bool):
+    def Set_In4(self, Value: bool) -> None:
         self.In4 = bool(Value)
         return
-    def Set_In5(self, Value: bool):
+    def Set_In5(self, Value: bool) -> None:
         self.In5 = bool(Value)
         return
-    def Set_In6(self, Value: bool):
+    def Set_In6(self, Value: bool) -> None:
         self.In6 = bool(Value)
         return
-    def Set_In7(self, Value: bool):
+    def Set_In7(self, Value: bool) -> None:
         self.In7 = bool(Value)
         return
-    def Set_In8(self, Value: bool):
+    def Set_In8(self, Value: bool) -> None:
         self.In8 = bool(Value)
         return
-    def Set_In9(self, Value: bool):
+    def Set_In9(self, Value: bool) -> None:
         self.In9 = bool(Value)
         return
-    def Set_In10(self, Value: bool):
+    def Set_In10(self, Value: bool) -> None:
         self.In10 = bool(Value)
         return
-    def Set_In11(self, Value: bool):
+    def Set_In11(self, Value: bool) -> None:
         self.In11 = bool(Value)
         return
-    def Set_In12(self, Value: bool):
+    def Set_In12(self, Value: bool) -> None:
         self.In12 = bool(Value)
         return
-    def Set_In13(self, Value: bool):
+    def Set_In13(self, Value: bool) -> None:
         self.In13 = bool(Value)
         return
-    def Set_In14(self, Value: bool):
+    def Set_In14(self, Value: bool) -> None:
         self.In14 = bool(Value)
         return
-    def Set_In15(self, Value: bool):
+    def Set_In15(self, Value: bool) -> None:
         self.In15 = bool(Value)
         return
     def Get_Out(self) -> int:
         return int(self.Out)
 
-def Unit_test():
+def Unit_test() -> None:
     print("Unit test start")
     from FbWordToBits import FbWordToBits
     DbWordToBits = FbWordToBits()

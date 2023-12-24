@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 # Преобразование слова в 16 бит.
@@ -27,24 +27,24 @@
 class FbWordToBits():
     def __init__(self): #Auto init VAR
         #Входные переменные, сохраняемые.
-        self.In = 0
+        self.In :int = 0
         #Выходные переменные, сохраняемые.
-        self.Out0 = False
-        self.Out1 = False
-        self.Out2 = False
-        self.Out3 = False
-        self.Out4 = False
-        self.Out5 = False
-        self.Out6 = False
-        self.Out7 = False
-        self.Out8 = False
-        self.Out9 = False
-        self.Out10 = False
-        self.Out11 = False
-        self.Out12 = False
-        self.Out13 = False
-        self.Out14 = False
-        self.Out15 = False
+        self.Out0 :bool = False
+        self.Out1 :bool = False
+        self.Out2 :bool = False
+        self.Out3 :bool = False
+        self.Out4 :bool = False
+        self.Out5 :bool = False
+        self.Out6 :bool = False
+        self.Out7 :bool = False
+        self.Out8 :bool = False
+        self.Out9 :bool = False
+        self.Out10 :bool = False
+        self.Out11 :bool = False
+        self.Out12 :bool = False
+        self.Out13 :bool = False
+        self.Out14 :bool = False
+        self.Out15 :bool = False
         #Внутренние переменные, сохраняемые.
         return
     def Run(self):
@@ -65,7 +65,7 @@ class FbWordToBits():
         self.Out14 = bool(self.In & 0b0100000000000000)
         self.Out15 = bool(self.In & 0b1000000000000000)
         return
-    def Set_In(self, Value: int):
+    def Set_In(self, Value: int) -> None:
         self.In = int(Value)
         return
     def Get_Out0(self) -> bool:
@@ -101,7 +101,7 @@ class FbWordToBits():
     def Get_Out15(self) -> bool:
         return bool(self.Out15)
 
-def Unit_test():
+def Unit_test() -> None:
     print("Unit test start")
     from FbBitsToWord import FbBitsToWord
     DbWordToBits = FbWordToBits()
