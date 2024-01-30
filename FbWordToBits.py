@@ -47,7 +47,7 @@ class FbWordToBits():
         self.Out15 :bool = False
         #Внутренние переменные, сохраняемые.
         return
-    def Run(self):
+    def __call__(self):
         self.Out0  = bool(self.In & 0b0000000000000001)
         self.Out1  = bool(self.In & 0b0000000000000010)
         self.Out2  = bool(self.In & 0b0000000000000100)
@@ -65,6 +65,8 @@ class FbWordToBits():
         self.Out14 = bool(self.In & 0b0100000000000000)
         self.Out15 = bool(self.In & 0b1000000000000000)
         return
+    #def __del__(self) -> None:
+    #    return
     def Set_In(self, Value: int) -> None:
         self.In = int(Value)
         return
@@ -109,7 +111,7 @@ def Unit_test() -> None:
     Error_flag = False
     for i in range(65536):
         DbWordToBits.In = i
-        DbWordToBits.Run()
+        DbWordToBits()
         DbBitsToWord.In0 = DbWordToBits.Out0
         DbBitsToWord.In1 = DbWordToBits.Out1
         DbBitsToWord.In2 = DbWordToBits.Out2
@@ -126,7 +128,7 @@ def Unit_test() -> None:
         DbBitsToWord.In13 = DbWordToBits.Out13
         DbBitsToWord.In14 = DbWordToBits.Out14
         DbBitsToWord.In15 = DbWordToBits.Out15
-        DbBitsToWord.Run()
+        DbBitsToWord()
         #print(hex(i), hex(DbBitsToWord.Out), hex(DbWordToBits.In))
         if (DbBitsToWord.Out != DbWordToBits.In):
             Error_flag = True
@@ -160,3 +162,6 @@ if (__name__ == "__main__"):
 # https://www.youtube.com/@DIY_PLC
 # https://github.com/DIYPLC
 
+# Спасибо за лекции.
+# https://www.youtube.com/@unx7784/playlists
+# https://www.youtube.com/@tkhirianov/playlists

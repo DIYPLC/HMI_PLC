@@ -47,7 +47,7 @@ class FbBitsToWord():
         self.Out :int = 0
         #Внутренние переменные, сохраняемые.
         return
-    def Run(self) -> None:
+    def __call__(self) -> None:
         self.Out = 0
         if (self.In0):
             self.Out = (self.Out | 0b0000_0000_0000_0001)
@@ -82,6 +82,8 @@ class FbBitsToWord():
         if (self.In15):
             self.Out = (self.Out | 0b1000_0000_0000_0000)
         return
+    #def __del__(self) -> None:
+    #    return
     def Set_In0(self, Value: bool) -> None:
         self.In0 = bool(Value)
         return
@@ -141,7 +143,7 @@ def Unit_test() -> None:
     Error_flag = False
     for i in range(65536):
         DbWordToBits.In = i
-        DbWordToBits.Run()
+        DbWordToBits()
         DbBitsToWord.In0 = DbWordToBits.Out0
         DbBitsToWord.In1 = DbWordToBits.Out1
         DbBitsToWord.In2 = DbWordToBits.Out2
@@ -158,7 +160,7 @@ def Unit_test() -> None:
         DbBitsToWord.In13 = DbWordToBits.Out13
         DbBitsToWord.In14 = DbWordToBits.Out14
         DbBitsToWord.In15 = DbWordToBits.Out15
-        DbBitsToWord.Run()
+        DbBitsToWord()
         #print(hex(i), hex(DbBitsToWord.Out), hex(DbWordToBits.In))
         if (DbBitsToWord.Out != DbWordToBits.In):
             Error_flag = True
@@ -192,3 +194,6 @@ if (__name__ == "__main__"):
 # https://www.youtube.com/@DIY_PLC
 # https://github.com/DIYPLC
 
+# Спасибо за лекции.
+# https://www.youtube.com/@unx7784/playlists
+# https://www.youtube.com/@tkhirianov/playlists
