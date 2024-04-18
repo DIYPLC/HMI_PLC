@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# 18 apr 2024
+# Windows 10 pro x64
+# Python 3.9.0
+# PyCharm Community Edition 2024.1
 
 # Преобразование слова в 16 бит.
 #      DbWordToBits
@@ -24,40 +28,45 @@
 #    +--------------+
 
 
-class FbWordToBits():
-    def __init__(self): #Auto init VAR
-        #Входные переменные, сохраняемые.
-        self.In :int = 0
-        #Выходные переменные, сохраняемые.
-        self.Out0 :bool = False
-        self.Out1 :bool = False
-        self.Out2 :bool = False
-        self.Out3 :bool = False
-        self.Out4 :bool = False
-        self.Out5 :bool = False
-        self.Out6 :bool = False
-        self.Out7 :bool = False
-        self.Out8 :bool = False
-        self.Out9 :bool = False
-        self.Out10 :bool = False
-        self.Out11 :bool = False
-        self.Out12 :bool = False
-        self.Out13 :bool = False
-        self.Out14 :bool = False
-        self.Out15 :bool = False
-        #Внутренние переменные, сохраняемые.
+class FbWordToBits(object):
+    """Преобразование слова в 16 бит."""
+
+    def __init__(self) -> None:
+        """Конструктор."""
+        # Входные переменные, сохраняемые.
+        self.In: int = 0
+        # Выходные переменные, сохраняемые.
+        self.Out0: bool = False
+        self.Out1: bool = False
+        self.Out2: bool = False
+        self.Out3: bool = False
+        self.Out4: bool = False
+        self.Out5: bool = False
+        self.Out6: bool = False
+        self.Out7: bool = False
+        self.Out8: bool = False
+        self.Out9: bool = False
+        self.Out10: bool = False
+        self.Out11: bool = False
+        self.Out12: bool = False
+        self.Out13: bool = False
+        self.Out14: bool = False
+        self.Out15: bool = False
+        # Внутренние переменные, сохраняемые.
         return
-    def __call__(self):
-        self.Out0  = bool(self.In & 0b0000000000000001)
-        self.Out1  = bool(self.In & 0b0000000000000010)
-        self.Out2  = bool(self.In & 0b0000000000000100)
-        self.Out3  = bool(self.In & 0b0000000000001000)
-        self.Out4  = bool(self.In & 0b0000000000010000)
-        self.Out5  = bool(self.In & 0b0000000000100000)
-        self.Out6  = bool(self.In & 0b0000000001000000)
-        self.Out7  = bool(self.In & 0b0000000010000000)
-        self.Out8  = bool(self.In & 0b0000000100000000)
-        self.Out9  = bool(self.In & 0b0000001000000000)
+
+    def __call__(self) -> None:
+        """Вызов экземпляра  DbWordToBits()."""
+        self.Out0 = bool(self.In & 0b0000000000000001)
+        self.Out1 = bool(self.In & 0b0000000000000010)
+        self.Out2 = bool(self.In & 0b0000000000000100)
+        self.Out3 = bool(self.In & 0b0000000000001000)
+        self.Out4 = bool(self.In & 0b0000000000010000)
+        self.Out5 = bool(self.In & 0b0000000000100000)
+        self.Out6 = bool(self.In & 0b0000000001000000)
+        self.Out7 = bool(self.In & 0b0000000010000000)
+        self.Out8 = bool(self.In & 0b0000000100000000)
+        self.Out9 = bool(self.In & 0b0000001000000000)
         self.Out10 = bool(self.In & 0b0000010000000000)
         self.Out11 = bool(self.In & 0b0000100000000000)
         self.Out12 = bool(self.In & 0b0001000000000000)
@@ -65,81 +74,103 @@ class FbWordToBits():
         self.Out14 = bool(self.In & 0b0100000000000000)
         self.Out15 = bool(self.In & 0b1000000000000000)
         return
-    #def __del__(self) -> None:
-    #    return
-    def Set_In(self, Value: int) -> None:
+
+    def __del__(self) -> None:
+        """Деструктор."""
+        del self
+        return
+
+    def set_in(self, value: int) -> None:
         self.In = int(Value)
         return
-    def Get_Out0(self) -> bool:
+
+    def get_out0(self) -> bool:
         return bool(self.Out0)
-    def Get_Out1(self) -> bool:
+
+    def get_out1(self) -> bool:
         return bool(self.Out1)
-    def Get_Out2(self) -> bool:
+
+    def get_out2(self) -> bool:
         return bool(self.Out2)
-    def Get_Out3(self) -> bool:
+
+    def get_out3(self) -> bool:
         return bool(self.Out3)
-    def Get_Out4(self) -> bool:
+
+    def get_out4(self) -> bool:
         return bool(self.Out4)
-    def Get_Out5(self) -> bool:
+
+    def get_out5(self) -> bool:
         return bool(self.Out5)
-    def Get_Out6(self) -> bool:
+
+    def get_out6(self) -> bool:
         return bool(self.Out6)
-    def Get_Out7(self) -> bool:
+
+    def get_out7(self) -> bool:
         return bool(self.Out7)
-    def Get_Out8(self) -> bool:
+
+    def get_out8(self) -> bool:
         return bool(self.Out8)
-    def Get_Out9(self) -> bool:
+
+    def get_out9(self) -> bool:
         return bool(self.Out9)
-    def Get_Out10(self) -> bool:
+
+    def get_out10(self) -> bool:
         return bool(self.Out10)
-    def Get_Out11(self) -> bool:
+
+    def get_out11(self) -> bool:
         return bool(self.Out11)
-    def Get_Out12(self) -> bool:
+
+    def get_out12(self) -> bool:
         return bool(self.Out12)
-    def Get_Out13(self) -> bool:
+
+    def get_out13(self) -> bool:
         return bool(self.Out13)
-    def Get_Out14(self) -> bool:
+
+    def get_out14(self) -> bool:
         return bool(self.Out14)
-    def Get_Out15(self) -> bool:
+
+    def get_out15(self) -> bool:
         return bool(self.Out15)
 
-def Unit_test() -> None:
+
+def unit_test() -> None:
     print("Unit test start")
     from FbBitsToWord import FbBitsToWord
-    DbWordToBits = FbWordToBits()
-    DbBitsToWord = FbBitsToWord()
-    Error_flag = False
+    word_to_bits = FbWordToBits()
+    bits_to_word = FbBitsToWord()
+    error_flag = False
     for i in range(65536):
-        DbWordToBits.In = i
-        DbWordToBits()
-        DbBitsToWord.In0 = DbWordToBits.Out0
-        DbBitsToWord.In1 = DbWordToBits.Out1
-        DbBitsToWord.In2 = DbWordToBits.Out2
-        DbBitsToWord.In3 = DbWordToBits.Out3
-        DbBitsToWord.In4 = DbWordToBits.Out4
-        DbBitsToWord.In5 = DbWordToBits.Out5
-        DbBitsToWord.In6 = DbWordToBits.Out6
-        DbBitsToWord.In7 = DbWordToBits.Out7
-        DbBitsToWord.In8 = DbWordToBits.Out8
-        DbBitsToWord.In9 = DbWordToBits.Out9
-        DbBitsToWord.In10 = DbWordToBits.Out10
-        DbBitsToWord.In11 = DbWordToBits.Out11
-        DbBitsToWord.In12 = DbWordToBits.Out12
-        DbBitsToWord.In13 = DbWordToBits.Out13
-        DbBitsToWord.In14 = DbWordToBits.Out14
-        DbBitsToWord.In15 = DbWordToBits.Out15
-        DbBitsToWord()
-        #print(hex(i), hex(DbBitsToWord.Out), hex(DbWordToBits.In))
-        if (DbBitsToWord.Out != DbWordToBits.In):
-            Error_flag = True
-    if (Error_flag):
+        word_to_bits.In = i
+        word_to_bits()
+        bits_to_word.In0 = word_to_bits.Out0
+        bits_to_word.In1 = word_to_bits.Out1
+        bits_to_word.In2 = word_to_bits.Out2
+        bits_to_word.In3 = word_to_bits.Out3
+        bits_to_word.In4 = word_to_bits.Out4
+        bits_to_word.In5 = word_to_bits.Out5
+        bits_to_word.In6 = word_to_bits.Out6
+        bits_to_word.In7 = word_to_bits.Out7
+        bits_to_word.In8 = word_to_bits.Out8
+        bits_to_word.In9 = word_to_bits.Out9
+        bits_to_word.In10 = word_to_bits.Out10
+        bits_to_word.In11 = word_to_bits.Out11
+        bits_to_word.In12 = word_to_bits.Out12
+        bits_to_word.In13 = word_to_bits.Out13
+        bits_to_word.In14 = word_to_bits.Out14
+        bits_to_word.In15 = word_to_bits.Out15
+        bits_to_word()
+        # print(hex(i), hex(bits_to_word.Out), hex(word_to_bits.In))
+        if bits_to_word.Out != word_to_bits.In:
+            error_flag = True
+    if error_flag:
         print("Test ERROR")
     else:
         print("Test OK")
     return
 
-if (__name__ == "__main__"):
-    Unit_test()
+
+if __name__ == "__main__":
+    unit_test()
     input("press any key for exit...")
 
 #  +---------+

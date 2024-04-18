@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# 18 apr 2024
+# Windows 10 pro x64
+# Python 3.9.0
+# PyCharm Community Edition 2024.1
 
 # Преобразование 16 бит в слово.
 #      DbBitsToWord
@@ -24,154 +28,181 @@
 #    +--------------+
 
 
-class FbBitsToWord():
-    def __init__(self): #Auto init VAR
-        #Входные переменные, сохраняемые.
-        self.In0 :bool = False
-        self.In1 :bool = False
-        self.In2 :bool = False
-        self.In3 :bool = False
-        self.In4 :bool = False
-        self.In5 :bool = False
-        self.In6 :bool = False
-        self.In7 :bool = False
-        self.In8 :bool = False
-        self.In9 :bool = False
-        self.In10 :bool = False
-        self.In11 :bool = False
-        self.In12 :bool = False
-        self.In13 :bool = False
-        self.In14 :bool = False
-        self.In15 :bool = False
-        #Выходные переменные, сохраняемые.
-        self.Out :int = 0
-        #Внутренние переменные, сохраняемые.
+class FbBitsToWord(object):
+    """Преобразование 16 бит в слово."""
+
+    def __init__(self) -> None:
+        """Конструктор."""
+        # Входные переменные, сохраняемые.
+        self.In0: bool = False
+        self.In1: bool = False
+        self.In2: bool = False
+        self.In3: bool = False
+        self.In4: bool = False
+        self.In5: bool = False
+        self.In6: bool = False
+        self.In7: bool = False
+        self.In8: bool = False
+        self.In9: bool = False
+        self.In10: bool = False
+        self.In11: bool = False
+        self.In12: bool = False
+        self.In13: bool = False
+        self.In14: bool = False
+        self.In15: bool = False
+        # Выходные переменные, сохраняемые.
+        self.Out: int = 0
+        # Внутренние переменные, сохраняемые.
         return
+
     def __call__(self) -> None:
+        """Вызов экземпляра  DbBitsToWord()."""
         self.Out = 0
-        if (self.In0):
+        if self.In0:
             self.Out = (self.Out | 0b0000_0000_0000_0001)
-        if (self.In1):
+        if self.In1:
             self.Out = (self.Out | 0b0000_0000_0000_0010)
-        if (self.In2):
+        if self.In2:
             self.Out = (self.Out | 0b0000_0000_0000_0100)
-        if (self.In3):
+        if self.In3:
             self.Out = (self.Out | 0b0000_0000_0000_1000)
-        if (self.In4):
+        if self.In4:
             self.Out = (self.Out | 0b0000_0000_0001_0000)
-        if (self.In5):
+        if self.In5:
             self.Out = (self.Out | 0b0000_0000_0010_0000)
-        if (self.In6):
+        if self.In6:
             self.Out = (self.Out | 0b0000_0000_0100_0000)
-        if (self.In7):
+        if self.In7:
             self.Out = (self.Out | 0b0000_0000_1000_0000)
-        if (self.In8):
+        if self.In8:
             self.Out = (self.Out | 0b0000_0001_0000_0000)
-        if (self.In9):
+        if self.In9:
             self.Out = (self.Out | 0b0000_0010_0000_0000)
-        if (self.In10):
+        if self.In10:
             self.Out = (self.Out | 0b0000_0100_0000_0000)
-        if (self.In11):
+        if self.In11:
             self.Out = (self.Out | 0b0000_1000_0000_0000)
-        if (self.In12):
+        if self.In12:
             self.Out = (self.Out | 0b0001_0000_0000_0000)
-        if (self.In13):
+        if self.In13:
             self.Out = (self.Out | 0b0010_0000_0000_0000)
-        if (self.In14):
+        if self.In14:
             self.Out = (self.Out | 0b0100_0000_0000_0000)
-        if (self.In15):
+        if self.In15:
             self.Out = (self.Out | 0b1000_0000_0000_0000)
         return
-    #def __del__(self) -> None:
-    #    return
-    def Set_In0(self, Value: bool) -> None:
-        self.In0 = bool(Value)
+
+    def __del__(self) -> None:
+        """Деструктор."""
+        del self
         return
-    def Set_In1(self, Value: bool) -> None:
-        self.In1 = bool(Value)
+
+    def set_in0(self, value: bool) -> None:
+        self.In0 = bool(value)
         return
-    def Set_In2(self, Value: bool) -> None:
-        self.In2 = bool(Value)
+
+    def set_in1(self, value: bool) -> None:
+        self.In1 = bool(value)
         return
-    def Set_In3(self, Value: bool) -> None:
-        self.In3 = bool(Value)
+
+    def set_in2(self, value: bool) -> None:
+        self.In2 = bool(value)
         return
-    def Set_In4(self, Value: bool) -> None:
-        self.In4 = bool(Value)
+
+    def set_in3(self, value: bool) -> None:
+        self.In3 = bool(value)
         return
-    def Set_In5(self, Value: bool) -> None:
-        self.In5 = bool(Value)
+
+    def set_in4(self, value: bool) -> None:
+        self.In4 = bool(value)
         return
-    def Set_In6(self, Value: bool) -> None:
-        self.In6 = bool(Value)
+
+    def set_in5(self, value: bool) -> None:
+        self.In5 = bool(value)
         return
-    def Set_In7(self, Value: bool) -> None:
-        self.In7 = bool(Value)
+
+    def set_in6(self, value: bool) -> None:
+        self.In6 = bool(value)
         return
-    def Set_In8(self, Value: bool) -> None:
-        self.In8 = bool(Value)
+
+    def set_in7(self, value: bool) -> None:
+        self.In7 = bool(value)
         return
-    def Set_In9(self, Value: bool) -> None:
-        self.In9 = bool(Value)
+
+    def set_in8(self, value: bool) -> None:
+        self.In8 = bool(value)
         return
-    def Set_In10(self, Value: bool) -> None:
-        self.In10 = bool(Value)
+
+    def set_in9(self, value: bool) -> None:
+        self.In9 = bool(value)
         return
-    def Set_In11(self, Value: bool) -> None:
-        self.In11 = bool(Value)
+
+    def set_in10(self, value: bool) -> None:
+        self.In10 = bool(value)
         return
-    def Set_In12(self, Value: bool) -> None:
-        self.In12 = bool(Value)
+
+    def set_in11(self, value: bool) -> None:
+        self.In11 = bool(value)
         return
-    def Set_In13(self, Value: bool) -> None:
-        self.In13 = bool(Value)
+
+    def set_in12(self, value: bool) -> None:
+        self.In12 = bool(value)
         return
-    def Set_In14(self, Value: bool) -> None:
-        self.In14 = bool(Value)
+
+    def set_in13(self, value: bool) -> None:
+        self.In13 = bool(value)
         return
-    def Set_In15(self, Value: bool) -> None:
-        self.In15 = bool(Value)
+
+    def set_in14(self, value: bool) -> None:
+        self.In14 = bool(value)
         return
-    def Get_Out(self) -> int:
+
+    def set_in15(self, value: bool) -> None:
+        self.In15 = bool(value)
+        return
+
+    def get_out(self) -> int:
         return int(self.Out)
 
-def Unit_test() -> None:
+
+def unit_test() -> None:
     print("Unit test start")
     from FbWordToBits import FbWordToBits
-    DbWordToBits = FbWordToBits()
-    DbBitsToWord = FbBitsToWord()
-    Error_flag = False
+    word_to_bits = FbWordToBits()
+    bits_to_word = FbBitsToWord()
+    error_flag = False
     for i in range(65536):
-        DbWordToBits.In = i
-        DbWordToBits()
-        DbBitsToWord.In0 = DbWordToBits.Out0
-        DbBitsToWord.In1 = DbWordToBits.Out1
-        DbBitsToWord.In2 = DbWordToBits.Out2
-        DbBitsToWord.In3 = DbWordToBits.Out3
-        DbBitsToWord.In4 = DbWordToBits.Out4
-        DbBitsToWord.In5 = DbWordToBits.Out5
-        DbBitsToWord.In6 = DbWordToBits.Out6
-        DbBitsToWord.In7 = DbWordToBits.Out7
-        DbBitsToWord.In8 = DbWordToBits.Out8
-        DbBitsToWord.In9 = DbWordToBits.Out9
-        DbBitsToWord.In10 = DbWordToBits.Out10
-        DbBitsToWord.In11 = DbWordToBits.Out11
-        DbBitsToWord.In12 = DbWordToBits.Out12
-        DbBitsToWord.In13 = DbWordToBits.Out13
-        DbBitsToWord.In14 = DbWordToBits.Out14
-        DbBitsToWord.In15 = DbWordToBits.Out15
-        DbBitsToWord()
-        #print(hex(i), hex(DbBitsToWord.Out), hex(DbWordToBits.In))
-        if (DbBitsToWord.Out != DbWordToBits.In):
-            Error_flag = True
-    if (Error_flag):
+        word_to_bits.In = i
+        word_to_bits()
+        bits_to_word.In0 = word_to_bits.Out0
+        bits_to_word.In1 = word_to_bits.Out1
+        bits_to_word.In2 = word_to_bits.Out2
+        bits_to_word.In3 = word_to_bits.Out3
+        bits_to_word.In4 = word_to_bits.Out4
+        bits_to_word.In5 = word_to_bits.Out5
+        bits_to_word.In6 = word_to_bits.Out6
+        bits_to_word.In7 = word_to_bits.Out7
+        bits_to_word.In8 = word_to_bits.Out8
+        bits_to_word.In9 = word_to_bits.Out9
+        bits_to_word.In10 = word_to_bits.Out10
+        bits_to_word.In11 = word_to_bits.Out11
+        bits_to_word.In12 = word_to_bits.Out12
+        bits_to_word.In13 = word_to_bits.Out13
+        bits_to_word.In14 = word_to_bits.Out14
+        bits_to_word.In15 = word_to_bits.Out15
+        bits_to_word()
+        # print(hex(i), hex(bits_to_word.Out), hex(word_to_bits.In))
+        if bits_to_word.Out != word_to_bits.In:
+            error_flag = True
+    if error_flag:
         print("Test ERROR")
     else:
         print("Test OK")
     return
 
-if (__name__ == "__main__"):
-    Unit_test()
+
+if __name__ == "__main__":
+    unit_test()
     input("press any key for exit...")
 
 #  +---------+

@@ -42,7 +42,7 @@ def Plot_GIU():
     return
 
 print("Начало программы в " + time.strftime("%H:%M:%S"))
-GUI = Global_var_for_GUI
+GUI = Global_var_for_GUI()
 Plot_GIU()
 FunctionTimeInterrypt1000ms() #Запустить прерывание каждые 1000мс
 GUI.root.mainloop()
