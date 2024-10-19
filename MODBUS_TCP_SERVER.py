@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 MODBUS TCP SERVER
 http://www.binarytides.com/python-socket-server-code-example/
@@ -213,3 +215,7 @@ if __name__ == "__main__":
 # https://oshwlab.com/diy.plc.314/PLC_HW1_SW1
 # https://3dtoday.ru/3d-models/mechanical-parts/body/korpus-na-din-reiku
 # https://t.me/DIY_PLC
+
+# Спасибо за лекции.
+# https://www.youtube.com/@unx7784/playlists
+# https://www.youtube.com/@tkhirianov/playlists
