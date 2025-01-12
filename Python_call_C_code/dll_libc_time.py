@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 print("Example call function in DLL")
 print("Test Windows 10 Python 3.11.2")
 import ctypes

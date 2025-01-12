@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 Mitsubishi inverter protocol.
 PU serial port control

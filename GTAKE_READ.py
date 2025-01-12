@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 """
 VFD GTAKE GK820-4T37B read default parameters
 Клеммы 485+ 485-

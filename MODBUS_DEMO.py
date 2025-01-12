@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import socket, struct
 
 Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

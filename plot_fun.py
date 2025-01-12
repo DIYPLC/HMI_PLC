@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 try: #импортируем библиотеку
     import matplotlib
     import matplotlib.pyplot

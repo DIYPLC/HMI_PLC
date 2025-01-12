@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+
 """
 Python 3.12.2
 Windows 10 pro x64

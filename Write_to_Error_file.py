@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import time
 
 def Write_to_Error_file(text = "text"):
