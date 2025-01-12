@@ -47,27 +47,13 @@ PLC.connect('192.168.13.128', 0, 3) #(PLC_IP,PLC_Rack,PLC_Slot)
 PLC_Tag = Read_real_value_from_PLC_DB(DB_Number = 64, Adr_start_byte_in_db = 0)
 print("IP=192.168.13.128 R=0 S=3 DB64.DBD0 READ REAL PLC Tag = ", PLC_Tag)
 
-#  +---------+
-#  | GNU GPL |
-#  +---------+
-#  |
-#  |
-#  .= .-_-. =.
-# ((_/)o o(\_))
-#  `-'(. .)`-'
-#  |/| \_/ |\
-#  ( |     | )
-#  /"\_____/"\
-#  \__)   (__/
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
 # Contacts: DIY.PLC.314@gmail.com
-# Date: 2014 - 2024
+# Date start LIB_PLC: 2014
 # License: GNU GPL-2.0-or-later
 # https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 # https://www.youtube.com/watch?v=n1F_MfLRlX0
-#
-# See also:
 # https://www.youtube.com/@DIY_PLC
 # https://github.com/DIYPLC/LIB_PLC
 # https://oshwlab.com/diy.plc.314/PLC_HW1_SW1
