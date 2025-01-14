@@ -1,87 +1,64 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+"""
+Python call c code for SOFT_PLC.
+For strart cd directory and enter command make
+Ubuntu 20.04.6 LTS + Python 3.8.10 + gcc 9.4.0 + GNU Make 4.2.1 test OK
+"""
 
-import os
+import os 
 import time
 import ctypes
 
 """INIT C CODE"""
 #LibPlc = ctypes.CDLL(os.path.abspath(os.path.join(os.path.dirname(__file__), "LibPlc.so")))
-LibPlc = ctypes.CDLL("./LibPlc.so")
-LibPlc.Read_float.restype = ctypes.c_float #return type for function.
-LibPlc.Read_double.restype = ctypes.c_double #return type for function.
+LibPlc = ctypes.CDLL("./LibPlc.so") # Alternative short
+#LibPlc.Read_float.restype = ctypes.c_float # specific call
+#LibPlc.Read_double.restype = ctypes.c_double # specific call
 
-class StructDbFilterA(ctypes.Structure): #c struct
-    """FbFilterA.h"""
+
+class DbPyTask(ctypes.Structure): #c struct
+    """ ./LIB_PLC/FbPyTask.h struct DbPyTask """
     _fields_ = [
-    ('In', ctypes.c_float),
-    ('Tf', ctypes.c_float),
     ('Ts', ctypes.c_float),
-    ('Out', ctypes.c_float) ]
-LibPlc.FbFilterA.argtypes = [ ctypes.POINTER(StructDbFilterA) ] #input function pointer struct
-DbFilterA = StructDbFilterA() #instance struct №1
-
-class StructDbTask1(ctypes.Structure): #c struct
-    """FbTask1.h"""
-    _fields_ = [
     ('Ts_ms', ctypes.c_uint32),
-    ('Reset', ctypes.c_bool) ]
-LibPlc.FbTask1.argtypes = [ ctypes.POINTER(StructDbTask1) ] #input function pointer struct
-DbTask1 = StructDbTask1() #instance struct №1
+    ('Reset', ctypes.c_bool),
+    ('MW0', ctypes.c_int16),
+    ('MW1', ctypes.c_int16),
+    ('MW2', ctypes.c_int16) ]
+LibPlc.FbPyTask.argtypes = [ ctypes.POINTER(DbPyTask) ] #input function pointer struct
+DbPyTask1 = DbPyTask() #instance c struct
+
+
+def setup():
+    DbPyTask1.Ts_ms = 0
+    DbPyTask1.Reset = True
+    LibPlc.FbPyTask(ctypes.byref(DbPyTask1))
+    DbPyTask1.MW0 = -5
+    DbPyTask1.MW1 = 3
+    return
 
 def loop():
     """CALL C CODE"""
-    #      DbTask1
-    #    +---------+
-    #    | FbTask1 |
-    # ->-|Ts_ms    |
-    # ->-|Reset    |
-    #    +---------+
-    DbTask1.Ts_ms = 100;
-    DbTask1.Reset = False;
-    LibPlc.FbTask1(ctypes.byref(DbTask1))
-    ###
-    print(LibPlc.Read_bool())
-    print(LibPlc.Read_uint8_t())
-    print(LibPlc.Read_uint16_t())
-    print(LibPlc.Read_uint32_t())
-    print(LibPlc.Read_uint64_t())
-    print(LibPlc.Read_int8_t())
-    print(LibPlc.Read_int16_t())
-    print(LibPlc.Read_int32_t())
-    print(LibPlc.Read_int64_t())
-    print(LibPlc.Read_float())
-    print(LibPlc.Read_double())
-    ###
-    LibPlc.Write_bool(True)
-    LibPlc.Write_uint8_t(8)
-    LibPlc.Write_uint16_t(16)
-    LibPlc.Write_uint32_t(32)
-    LibPlc.Write_uint64_t(64)
-    LibPlc.Write_int8_t(-8)
-    LibPlc.Write_int16_t(-16)
-    LibPlc.Write_int32_t(-32)
-    LibPlc.Write_int64_t(-64)
-    LibPlc.Write_float(ctypes.c_float(3.2))
-    LibPlc.Write_double(ctypes.c_double(6.4))
-    #Фильтр апериодический.
-    #      DbFilterA
-    #    +-----------+
-    #    | FbFilterA |
-    # ->-|In      Out|->-
-    #   -|Tf         |
-    #   -|Ts         |
-    #    +-----------+
-    DbFilterA.In = 3.14
-    DbFilterA.Tf = 0.0
-    DbFilterA.Ts = 0.1
-    LibPlc.FbFilterA(ctypes.byref(DbFilterA))
-    print(DbFilterA.Out)
+    # Example two way interface
+    DbPyTask1.Ts_ms = 100
+    DbPyTask1.Reset = False
+    LibPlc.FbPyTask(ctypes.byref(DbPyTask1))
+    print("MW2=", DbPyTask1.MW2)
+    # Example one way interface
+    #print(LibPlc.Read_int8_t()) # not specific call
+    #LibPlc.Write_int8_t(-8) # not specific call
+    #LibPlc.Write_float(ctypes.c_float(3.2)) # specific call
+    #LibPlc.Write_double(ctypes.c_double(6.4)) # specific call
     return
 
 if(__name__ == "__main__"):
-    loop()
-    
+    setup()
+    if(True):
+    #while(True):
+        loop()
+		
+
 #input("Press any key.")
 
 # @COPYLEFT ALL WRONGS RESERVED :)
