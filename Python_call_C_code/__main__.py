@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 Python call c code for SOFT_PLC.
-For strart cd directory and enter command make
+For start cd directory and enter command make
 Ubuntu 20.04.6 LTS + Python 3.8.10 + gcc 9.4.0 + GNU Make 4.2.1 test OK
+android + termux test ok
 """
 
-import os 
+import os
 import time
 import ctypes
 
@@ -52,14 +53,11 @@ def loop():
     #LibPlc.Write_double(ctypes.c_double(6.4)) # specific call
     return
 
-if(__name__ == "__main__"):
+if __name__ == "__main__":
     setup()
-    if(True):
-    #while(True):
+    if True:
+    #while True:
         loop()
-		
-
-#input("Press any key.")
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
