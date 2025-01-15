@@ -22,91 +22,68 @@ def error_generator():
 
 class GlobalVar(object):
 
-    def __init__(self) -> None:  # Auto init VAR
+    def __init__(self) -> None:
         """ GLOBAL VAR """
-        self.Ts_ns: int = 0
-        self.Reset: bool = False
+        self.time_sample_ns: int = 0
+        self.Reset: bool = True
         """ TODO MODBUS TCP CLIENT """
         self.ADR1_MW0: int = 0  # MODBUS TCP Holding register int16
+        """ USER VARIABLES """
+        self.user_timer_1_ns :int = 0
         """ GLOBAL CLASS """
         try:
             self.rtc = Rtc()
         except BaseException:
-            write_to_error_file("ERROR Global_var __init__ FbRTC()")
-
-class Task(object):
-
-    def __init__(self) -> None:
-        self.Reset :bool = False
-        self.time_sample_ns :int = 0
-        self.timer_1_ns :int = 0
-        return
+            write_to_error_file("ERROR GlobalVar __init__ Rtc()")
 
     def __call__(self) -> None:
-        self.timer_1_ns = self.timer_1_ns + self.time_sample_ns
-        timer1_s :float = float(self.timer_1_ns) / 1000000000.0
-        print("timer1_s =", timer1_s, GV.rtc.rtc_label)
+        self.Reset = False
+        self.rtc()
+        self.time_sample_ns = self.rtc.time_sample_ns
         return
 
     def __del__(self) -> None:
         del self
         return
 
-def setup() -> None:  # Arduino style.)
-    GV.Reset = True
-    Task1.Reset = True
-    Task1.time_sample_ns = GV.rtc.time_sample_ns
-    Task1()
+
+def task_cyclic(reset :bool = False, time_sample_ns :int = 0) -> None: # LIB_PLC style.
+    GV.user_timer_1_ns = GV.user_timer_1_ns + time_sample_ns
+    user_timer_1_s :float = GV.user_timer_1_ns / 10**9
+    print("user_timer_1_s", user_timer_1_s)
     return
 
-def loop() -> None:  # Arduino style.)
-    GV.Reset = False
-    GV.rtc()
-    GV.Ts_ns = GV.rtc.time_sample_ns
-    Task1.Reset = False
-    Task1.time_sample_ns = GV.rtc.time_sample_ns
-    Task1()
-    time.sleep(0.1)  # TODO DEBUG 0.1s.
+def setup() -> None:  # Arduino style.
+    task_cyclic(reset = GV.Reset, time_sample_ns= GV.rtc.time_sample_ns)
     return
 
-if __name__ == "__main__":
-    """
-    # DEBUG MODE WITH ERRORS
-    GV = GlobalVar()
-    Task1 = Task()S
+def loop() -> None:  # Arduino style.
+    time.sleep(0.5)  # TODO DEBUG
+    GV() # Update sample time and reset flag
+    task_cyclic(reset=GV.Reset, time_sample_ns=GV.rtc.time_sample_ns)
+    return
+
+def main() -> None: # GCC style.
     setup()
     while True:
         loop()
-    """
-    write_to_error_file("OK SOFT PLC START")
-    flag_error :bool = True
-    while flag_error:
-        try:
-            GV = GlobalVar()
-            Task1 = Task()
-            flag_error = False
-        except BaseException:
-            write_to_error_file("ERROR __main__ Global_var()")
-            print("ERROR delay 10s")
+
+if __name__ == "__main__":
+    debug_mode :bool = False # TODO DEBUG
+    if debug_mode:
+        GV = GlobalVar()
+        main()
+    else:
+        while True:
+            try:
+                write_to_error_file("OK SOFT PLC START")
+                GV = GlobalVar()
+                main()
+            except BaseException:
+                print("ERROR delay 10s")
+                write_to_error_file("ERROR __main__.py")
             time.sleep(10)  # second
-            flag_error = True
-    flag_error :bool = True
-    while flag_error:
-        try:
-            setup()
-            flag_error = False
-        except BaseException:
-            write_to_error_file("ERROR __main__ setup()")
-            print("ERROR delay 10s")
-            time.sleep(10)  # second
-            flag_error = True
-    while True:
-        try:
-            loop()
-        except BaseException:
-            write_to_error_file("ERROR __main__ loop()")
-            print("ERROR delay 10s")
-            time.sleep(10)  # second
+
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
@@ -120,3 +97,4 @@ if __name__ == "__main__":
 # https://oshwlab.com/diy.plc.314/PLC_HW1_SW1
 # https://3dtoday.ru/3d-models/mechanical-parts/body/korpus-na-din-reiku
 # https://t.me/DIY_PLC
+
