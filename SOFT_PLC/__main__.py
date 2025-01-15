@@ -46,7 +46,6 @@ class Task(object):
         self.timer_1_ns = self.timer_1_ns + self.time_sample_ns
         timer1_s :float = float(self.timer_1_ns) / 1000000000.0
         print("timer1_s =", timer1_s, GV.rtc.rtc_label)
-        time.sleep(0.5)  # DEBUG
         return
 
     def __del__(self) -> None:
