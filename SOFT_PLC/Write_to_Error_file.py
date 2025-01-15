@@ -3,7 +3,6 @@
 
 import time
 
-
 def write_to_error_file(text: str = "text") -> None:
     # Записываем ошибки в файл если файл слишком большой стираем его и пишем в чистый файл.
     _FILE_NAME = "Error.txt"
@@ -22,11 +21,9 @@ def write_to_error_file(text: str = "text") -> None:
     f.close()
     return
 
-
 def unit_test():
     write_to_error_file("Unit test for error file")
     return
-
 
 if __name__ == "__main__":
     unit_test()

@@ -4,86 +4,94 @@
 """
 SOFT PLC
 Python 3.12.2
-Windows 10 pro x64
-18 apr 2024
+Windows 10 Pro x64
+Ubuntu 20.04.6 LTS + Python 3.8.10
+15 jan 2025
 """
 
-import tkinter
+#import tkinter # TODO in ubuntu not work
 import time
 import socket
 import struct
 import array
-from RTC import FbRTC
+from RTC import Rtc
 from Write_to_Error_file import write_to_error_file
-
 
 def error_generator():
     return 0 / 0
 
-
-def nop():
-    return
-
-
 class GlobalVar(object):
-    """Глобальные переменные и классы."""
 
     def __init__(self) -> None:  # Auto init VAR
-        """ Инициализация глобальных переменных. """
-        self.Ts_ns: int = 0  # Шаг дискретизации по времени [нс].
-        self.Reset: bool = False  # Сброс при перезагрузке.
-        """MODBUS TCP CLIENT"""
+        """ GLOBAL VAR """
+        self.Ts_ns: int = 0
+        self.Reset: bool = False
+        """ TODO MODBUS TCP CLIENT """
         self.ADR1_MW0: int = 0  # MODBUS TCP Holding register int16
-        """ Инициализация глобальных классов. """
-        try:  # RTC
-            self.RTC = FbRTC()
+        """ GLOBAL CLASS """
+        try:
+            self.rtc = Rtc()
         except BaseException:
             write_to_error_file("ERROR Global_var __init__ FbRTC()")
 
+class Task(object):
 
-def task_cyclic(reset: bool = False, ts_ns: int = 0) -> None:
-    print("OK Uptime_s =", GV.RTC.Uptime_s)
-    return
+    def __init__(self) -> None:
+        self.Reset :bool = False
+        self.time_sample_ns :int = 0
+        self.timer_1_ns :int = 0
+        return
 
+    def __call__(self) -> None:
+        self.timer_1_ns = self.timer_1_ns + self.time_sample_ns
+        timer1_s :float = float(self.timer_1_ns) / 1000000000.0
+        print("timer1_s =", timer1_s, GV.rtc.rtc_label)
+        time.sleep(0.5)  # DEBUG
+        return
 
-def setup():  # Arduino style.)
-    # RST
+    def __del__(self) -> None:
+        del self
+        return
+
+def setup() -> None:  # Arduino style.)
     GV.Reset = True
-    # Задача вызывается циклически.
-    task_cyclic(reset=True, ts_ns=0)  # Задача 1 LIB_PLC style.)
+    Task1.Reset = True
+    Task1.time_sample_ns = GV.rtc.time_sample_ns
+    Task1()
     return
 
-
-def loop():  # Arduino style.)
-    # RTC
-    GV.RTC()
-    GV.Ts_ns = GV.RTC.Ts_ns
-    # RST
+def loop() -> None:  # Arduino style.)
     GV.Reset = False
-    # Ts Расчет времени скана программного ПЛК.
-    # Задача вызывается циклически.
-    task_cyclic(reset=False, ts_ns=GV.RTC.Ts_ns)  # Задача 1 LIB_PLC style.)
-    # DELAY
-    time.sleep(0.1)  # 0.1s задержка чтоб меньше грузить процессор.
+    GV.rtc()
+    GV.Ts_ns = GV.rtc.time_sample_ns
+    Task1.Reset = False
+    Task1.time_sample_ns = GV.rtc.time_sample_ns
+    Task1()
+    time.sleep(0.1)  # TODO DEBUG 0.1s.
     return
-
 
 if __name__ == "__main__":
-    write_to_error_file("OK START")
-    """Безопасная инициализация глобальных переменных с повтором при ошибке"""
-    flag_error: bool = True
+    """
+    # DEBUG MODE WITH ERRORS
+    GV = GlobalVar()
+    Task1 = Task()S
+    setup()
+    while True:
+        loop()
+    """
+    write_to_error_file("OK SOFT PLC START")
+    flag_error :bool = True
     while flag_error:
         try:
             GV = GlobalVar()
+            Task1 = Task()
             flag_error = False
         except BaseException:
             write_to_error_file("ERROR __main__ Global_var()")
             print("ERROR delay 10s")
             time.sleep(10)  # second
             flag_error = True
-    """Безопасный вызов первого скана с повтором при ошибке"""
-    setup()
-    flag_error: bool = True
+    flag_error :bool = True
     while flag_error:
         try:
             setup()
@@ -93,17 +101,13 @@ if __name__ == "__main__":
             print("ERROR delay 10s")
             time.sleep(10)  # second
             flag_error = True
-    # if(1): #FOR DEBUG
-    while 1:
-        """Безопасный вызов скана программы с повтором при ошибке"""
+    while True:
         try:
             loop()
         except BaseException:
             write_to_error_file("ERROR __main__ loop()")
             print("ERROR delay 10s")
             time.sleep(10)  # second
-    print("OK STOP", RTC_label())
-    # input("Press any key...")
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
