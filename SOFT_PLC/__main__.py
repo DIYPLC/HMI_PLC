@@ -50,9 +50,9 @@ class GlobalVar(object):
         return
 
 
-def task_cyclic(reset: bool = False, time_sample_ns: int = 0) -> None:  # LIB_PLC style.
+def task_cyclic(reset: bool = False, time_sample_ns: int = 0) -> None: # LIB_PLC style.
     GV.user_timer_1_ns = GV.user_timer_1_ns + time_sample_ns
-    user_timer_1_s = float(GV.user_timer_1_ns / 10 ** 9)
+    user_timer_1_s = float(GV.user_timer_1_ns / (10**9))
     print("user_timer_1_s", user_timer_1_s)
     return
 

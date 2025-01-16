@@ -45,9 +45,9 @@ def _unit_test_() -> None:
         DbFilterA1()
         timer1 = timer1 + 0.1
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _unit_test_()
-    input("press any key ")
+    input("press any key for exit...")
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA

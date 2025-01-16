@@ -50,7 +50,7 @@ class Rtc(object):
             self.time_sample_max_ns = self.time_sample_ns
         """ Uptime PLC """
         self.Uptime_ns = self.Uptime_ns + self.time_sample_ns
-        self.Uptime_s = self.Uptime_ns // 10**9
+        self.Uptime_s = self.Uptime_ns // (10**9)
         self.Uptime_day = self.Uptime_s // (60*60*24)
         """ PC RTC. """
         rtc_struct = time.localtime()
