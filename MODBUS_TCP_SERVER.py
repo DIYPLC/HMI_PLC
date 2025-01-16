@@ -6,188 +6,204 @@ MODBUS TCP SERVER
 http://www.binarytides.com/python-socket-server-code-example/
 """
 
-import socket #FOR TCP SERVER
-import select #FOR TCP SERVER
-import struct #FOR MODBUS PROTOCOL
-import array  #FOR MODBUS PROTOCOL
+import socket  # FOR TCP SERVER
+import select  # FOR TCP SERVER
+import struct  # FOR MODBUS PROTOCOL
+import array  # FOR MODBUS PROTOCOL
 
-IP_ADDRESS = "0.0.0.0"
-TCP_PORT = 502
-MODBUS_ADDRESS = 1
-Register = array.array('H',[0]*65536) #holding Register
+ip_address = "0.0.0.0"
+tcp_port = 502
+modbus_address = 1
+Register = array.array('H', [0] * 65536)  # holding Register
 
-def Debug_test_init_registers():
-    """Test init regesters value"""
-    for i in range(65536): #i = 0...65536-1
+
+def debug_test_init_registers() -> None:
+    """Test init registers value"""
+    for i in range(65536):  # i = 0...65536-1
         Register[i] = i
     return
 
-def Limit(In = 0, Max = 65535, Min = 0):
-    """Limit to a safe value"""
-    _In = int(In)
-    _Out = int(0)
-    if (_In >= Max):
-        _Out = Max
+
+def limit(in1: int = 0, maximum: int = 65535, minimum: int = 0) -> int:
+    """ Limit to a safe value """
+    _in = int(in1)
+    _out = int(0)
+    if _in >= maximum:
+        _out = maximum
     else:
-        if (_In <= Min):
-            _Out = Min
+        if _in <= minimum:
+            _out = minimum
         else:
-            _Out = _In
-    return _Out
+            _out = _in
+    return _out
 
-def Read_register(Register_address = 0):
-    """Safe reading from an array"""
-    address = Limit(In = Register_address, Max = 65535, Min = 0)
-    return Register[ address ]
 
-def Write_register(Register_address = 0, Register_value = 0):
-    """Safe writing to an array"""
-    address = Limit(In = Register_address, Max = 65535, Min = 0)
-    value   = Limit(In = Register_value, Max = 65535, Min = 0)
-    Register[ address ] = value
+def read_register(register_address=0):
+    """ Safe reading from an array """
+    address = limit(in1=register_address, maximum=65535, minimum=0)
+    return Register[address]
+
+
+def write_register(register_address=0, register_value=0):
+    """ Safe writing to an array """
+    address = limit(in1=register_address, maximum=65535, minimum=0)
+    value = limit(in1=register_value, maximum=65535, minimum=0)
+    Register[address] = value
     return
 
-def Two_uint8_to_uint16(uint8_hi = 0, uint8_lo = 0):
+
+def two_uint8_to_uint16(uint8_hi=0, uint8_lo=0):
     _uint8_hi = (int(uint8_hi) & 0xFF) << 8
     _uint8_lo = int(uint8_lo) & 0xFF
     _res = (_uint8_hi | _uint8_lo) & 0xFFFF
     return _res
 
-def Error_function_not_supported(Rx_ADU):
-    """Error function not supported"""
-    Tx_Transaction_ID_hi = Rx_ADU[0]
-    Tx_Transaction_ID_lo = Rx_ADU[1]
-    Tx_Protocol_ID_hi    = Rx_ADU[2]
-    Tx_Protocol_ID_lo    = Rx_ADU[3]
-    Tx_Message_length_hi = 0
-    Tx_Message_length_lo = 3
-    Tx_MODBUS_address    = Rx_ADU[6]
-    Tx_MODBUS_function   = Rx_ADU[7] | 0b10000000
-    Tx_Error_code        = 1
-    Tx_ADU = struct.pack(">BBBBBBBBB",Tx_Transaction_ID_hi,Tx_Transaction_ID_lo,Tx_Protocol_ID_hi,Tx_Protocol_ID_lo,Tx_Message_length_hi,Tx_Message_length_lo,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Error_code)
-    return Tx_ADU
 
-def MODBUS_TCP_SERVER_FUN_3(Rx_ADU):
-    """Read holding registers"""
-    len_rx = len(Rx_ADU)
-    if (len_rx == 12): #CONST Len for uint16
-        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Register_address,Rx_Register_count) = struct.unpack(">HHHBBHH", Rx_ADU)
-        if (Rx_Register_count <= 127): #limit size
-            Tx_Transaction_ID =  Rx_Transaction_ID
-            Tx_Protocol_ID =     Rx_Protocol_ID
-            Tx_Message_length =  (Rx_Register_count * 2) + 3
-            Tx_MODBUS_address =  Rx_MODBUS_address
-            Tx_MODBUS_function = Rx_MODBUS_function
-            Tx_Byte_count =      Rx_Register_count * 2  #1byte Rx_Register_count * 2
-            Tx_ADU = struct.pack(">HHHBBB",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Byte_count)
-            i_stop = Limit(In = Rx_Register_count, Max = 127, Min = 0)
+def error_function_not_supported(rx_adu):
+    """ Error function not supported """
+    tx_transaction_id_hi = rx_adu[0]
+    tx_transaction_id_lo = rx_adu[1]
+    tx_protocol_id_hi = rx_adu[2]
+    tx_protocol_id_lo = rx_adu[3]
+    tx_message_length_hi = 0
+    tx_message_length_lo = 3
+    tx_modbus_address = rx_adu[6]
+    tx_modbus_function = rx_adu[7] | 0b10000000
+    tx_error_code = 1
+    tx_adu = struct.pack(">BBBBBBBBB", tx_transaction_id_hi, tx_transaction_id_lo, tx_protocol_id_hi, tx_protocol_id_lo,
+                         tx_message_length_hi, tx_message_length_lo, tx_modbus_address, tx_modbus_function,
+                         tx_error_code)
+    return tx_adu
+
+
+def modbus_tcp_server_fun_3(rx_adu):
+    """ Read holding registers """
+    len_rx = len(rx_adu)
+    if len_rx == 12:  # CONST Len for uint16
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
+         rx_register_address, rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
+        if rx_register_count <= 127:  #limit size
+            tx_transaction_id = rx_transaction_id
+            tx_protocol_id = rx_protocol_id
+            tx_message_length = (rx_register_count * 2) + 3
+            tx_modbus_address = rx_modbus_address
+            tx_modbus_function = rx_modbus_function
+            tx_byte_count = rx_register_count * 2  #1byte rx_register_count * 2
+            tx_adu = struct.pack(">HHHBBB", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                                 tx_modbus_function, tx_byte_count)
+            i_stop = limit(in1=rx_register_count, maximum=127, minimum=0)
             i = 0
-            while (i != i_stop): #i=Rx_Register_count-1...0
-                address = Rx_Register_address + i
-                value = Read_register(Register_address = address)
-                Tx_ADU = Tx_ADU + struct.pack(">H",value)
+            while i != i_stop:  # i=rx_register_count-1...0
+                address = rx_register_address + i
+                value = read_register(register_address=address)
+                tx_adu = tx_adu + struct.pack(">H", value)
                 i = i + 1
         else:
             print("ERROR FUN3")
-            Tx_ADU = Error_function_not_supported(Rx_ADU)
+            tx_adu = error_function_not_supported(rx_adu)
     else:
         print("ERROR LEN FUN3")
-        Tx_ADU = Error_function_not_supported(Rx_ADU)
-    return Tx_ADU
+        tx_adu = error_function_not_supported(rx_adu)
+    return tx_adu
 
-def MODBUS_TCP_SERVER_FUN_16(Rx_ADU):
-    """Write multiple holding registers"""
-    len_rx = len(Rx_ADU)
-    Rx_Message_length = Two_uint8_to_uint16(uint8_hi = Rx_ADU[4], uint8_lo = Rx_ADU[5])
-    Rx_Register_count   = Two_uint8_to_uint16(uint8_hi = Rx_ADU[10], uint8_lo = Rx_ADU[11])
-    Rx_Byte_count = Rx_ADU[12]
-    if (Rx_Byte_count == Rx_Register_count*2) and (Rx_Message_length + 6 == len_rx): #Correct ADU
-        Rx_Transaction_ID = Two_uint8_to_uint16(uint8_hi = Rx_ADU[0], uint8_lo = Rx_ADU[1])
-        Rx_Protocol_ID    = Two_uint8_to_uint16(uint8_hi = Rx_ADU[2], uint8_lo = Rx_ADU[3])
-        Rx_MODBUS_address  = Rx_ADU[6]
-        Rx_MODBUS_function = Rx_ADU[7]
-        Rx_Register_address = Two_uint8_to_uint16(uint8_hi = Rx_ADU[8], uint8_lo = Rx_ADU[9])
-        Rx_Byte_count = Rx_ADU[12]
-        Tx_Transaction_ID   = Rx_Transaction_ID
-        Tx_Protocol_ID      = Rx_Protocol_ID
-        Tx_Message_length   = 6
-        Tx_MODBUS_address   = Rx_MODBUS_address
-        Tx_MODBUS_function  = Rx_MODBUS_function
-        Tx_Register_address = Rx_Register_address
-        Tx_Register_count   = Rx_Register_count
-        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
-        i_stop = Limit(In = Rx_Register_count, Max = 127, Min = 0)
+
+def modbus_tcp_server_fun_16(rx_adu):
+    """ Write multiple holding registers """
+    len_rx = len(rx_adu)
+    rx_message_length = two_uint8_to_uint16(uint8_hi=rx_adu[4], uint8_lo=rx_adu[5])
+    rx_register_count = two_uint8_to_uint16(uint8_hi=rx_adu[10], uint8_lo=rx_adu[11])
+    rx_byte_count = rx_adu[12]
+    if (rx_byte_count == rx_register_count * 2) and (rx_message_length + 6 == len_rx):  #Correct ADU
+        rx_transaction_id = two_uint8_to_uint16(uint8_hi=rx_adu[0], uint8_lo=rx_adu[1])
+        rx_protocol_id = two_uint8_to_uint16(uint8_hi=rx_adu[2], uint8_lo=rx_adu[3])
+        rx_modbus_address = rx_adu[6]
+        rx_modbus_function = rx_adu[7]
+        rx_register_address = two_uint8_to_uint16(uint8_hi=rx_adu[8], uint8_lo=rx_adu[9])
+        rx_byte_count = rx_adu[12]
+        tx_transaction_id = rx_transaction_id
+        tx_protocol_id = rx_protocol_id
+        tx_message_length = 6
+        tx_modbus_address = rx_modbus_address
+        tx_modbus_function = rx_modbus_function
+        tx_register_address = rx_register_address
+        tx_register_count = rx_register_count
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                             tx_modbus_function, tx_register_address, tx_register_count)
+        i_stop = limit(in1=rx_register_count, maximum=127, minimum=0)
         i = 0
-        while (i != i_stop): #i=Rx_Register_count-1...0
-            address = Rx_Register_address + i
-            value   = Two_uint8_to_uint16(uint8_hi = Rx_ADU[13 + i * 2], uint8_lo = Rx_ADU[14 + i * 2])
-            Write_register(Register_address = address, Register_value = value) 
+        while i != i_stop:  # i=rx_register_count-1...0
+            address = rx_register_address + i
+            value = two_uint8_to_uint16(uint8_hi=rx_adu[13 + i * 2], uint8_lo=rx_adu[14 + i * 2])
+            write_register(register_address=address, register_value=value)
             i = i + 1
     else:
         print("ERROR FUN16")
-        Tx_ADU = Error_function_not_supported(Rx_ADU)
-    return Tx_ADU
+        tx_adu = error_function_not_supported(rx_adu)
+    return tx_adu
 
-def PROTOCOL_MODBUS_TCP_SERVER(Rx_ADU):
-    """Tx_ADU = MODBUS_TCP_SERVER_PROCESSING_ADU(Rx_ADU)"""
-    Rx_MODBUS_address  = Rx_ADU[6]
-    Rx_MODBUS_function = Rx_ADU[7]
-    if (Rx_MODBUS_address == MODBUS_ADDRESS): #Check MODBUS ADR
-        if  (Rx_MODBUS_function == 3):
-            Tx_ADU = MODBUS_TCP_SERVER_FUN_3(Rx_ADU)
-        elif(Rx_MODBUS_function == 16):
-            Tx_ADU = MODBUS_TCP_SERVER_FUN_16(Rx_ADU)
+
+def protocol_modbus_tcp_server(rx_adu):
+    """ tx_adu = protocol_modbus_tcp_server(rx_adu) """
+    rx_modbus_address = rx_adu[6]
+    rx_modbus_function = rx_adu[7]
+    if rx_modbus_address == modbus_address:  #Check MODBUS ADR
+        if rx_modbus_function == 3:
+            tx_adu = modbus_tcp_server_fun_3(rx_adu)
+        elif rx_modbus_function == 16:
+            tx_adu = modbus_tcp_server_fun_16(rx_adu)
         else:
             print("ERROR FUN NUMBER")
-            Tx_ADU = Error_function_not_supported(Rx_ADU)
+            tx_adu = error_function_not_supported(rx_adu)
     else:
         print("ERROR MODBUS ADR")
-        Tx_ADU = Error_function_not_supported(Rx_ADU)
-    return Tx_ADU
+        tx_adu = error_function_not_supported(rx_adu)
+    return tx_adu
 
-def Task_MODBUS_TCP_SEREVER():
-    CONNECTION_LIST = []    # list of socket clients
-    RECV_BUFFER = 1024 #Byte recive byffer size
+
+def task_modbus_tcp_server():
+    connection_list = []  # list of socket clients
+    recv_buffer = 1024  # Byte receive buffer size
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server_socket.bind((IP_ADDRESS, TCP_PORT))
-    server_socket.listen(8) #Number of TCP clients
-    CONNECTION_LIST.append(server_socket)
-    print( "TCP server started")
+    server_socket.bind((ip_address, tcp_port))
+    server_socket.listen(8)  # Number of TCP clients
+    connection_list.append(server_socket)
+    print("TCP server started")
     while True:
         # Get the list sockets which are ready to be read through select
-        read_sockets,write_sockets,error_sockets = select.select(CONNECTION_LIST,[],[])
+        read_sockets, write_sockets, error_sockets = select.select(connection_list, [], [])
         for sock in read_sockets:
-            #New connection
+            # New connection
             if sock == server_socket:
                 # Handle the case in which there is a new connection recieved through server_socket
                 sockfd, addr = server_socket.accept()
-                CONNECTION_LIST.append(sockfd)
-                print( "Client online" , addr)
-            #Some incoming message from a client
+                connection_list.append(sockfd)
+                print("Client online", addr)
+            # Some incoming message from a client
             else:
                 # Data recieved from client, process it
                 try:
-                    #In Windows, sometimes when a TCP program closes abruptly,
+                    # In Windows, sometimes when a TCP program closes abruptly,
                     # a "Connection reset by peer" exception will be thrown
-                    Rx_ADU = sock.recv(RECV_BUFFER)
+                    rx_adu = sock.recv(recv_buffer)
                     #
-                    Tx_ADU = PROTOCOL_MODBUS_TCP_SERVER(Rx_ADU)
-                    if Rx_ADU:
-                        sock.send(Tx_ADU)
+                    tx_adu = protocol_modbus_tcp_server(rx_adu)
+                    if rx_adu:
+                        sock.send(tx_adu)
                 # client disconnected, so remove from socket list
-                except:
+                except BaseException:
                     #broadcast_data(sock, "Client (%s, %s) is offline" % addr)
-                    print( "Client offline", addr)
+                    print("Client offline", addr)
                     sock.close()
-                    CONNECTION_LIST.remove(sock)
+                    connection_list.remove(sock)
                     continue
     server_socket.close()
     return
 
+
 if __name__ == "__main__":
-    Debug_test_init_registers()
-    Task_MODBUS_TCP_SEREVER()
+    #debug_test_init_registers()
+    task_modbus_tcp_server()
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
@@ -202,6 +218,3 @@ if __name__ == "__main__":
 # https://3dtoday.ru/3d-models/mechanical-parts/body/korpus-na-din-reiku
 # https://t.me/DIY_PLC
 
-# Спасибо за лекции.
-# https://www.youtube.com/@unx7784/playlists
-# https://www.youtube.com/@tkhirianov/playlists

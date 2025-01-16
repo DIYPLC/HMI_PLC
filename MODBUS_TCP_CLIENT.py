@@ -9,6 +9,485 @@ Modbus function 16 write multiple holding registers uint16
 Modbus function 6  write single register
 Modbus function 4  read one input register
 Learn more at: http://www.modbus.org/
+"""
+
+import socket
+import struct
+import array
+
+
+def modbus_tcp_client_read_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                   register_address=0) -> int:
+    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 1
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 3
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                             tx_modbus_function, tx_register_address, tx_register_count)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
+         rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
+        client_socket.close()
+        client_socket.__del__()
+        return rx_register_value
+    except BaseException:
+        print("ERROR: MODBUS_TCP_client_read_holding_register_uint16()")
+        client_socket.close()
+        client_socket.__del__()
+        return 0
+
+
+def modbus_tcp_client_write_multiple_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                             register_address=0, register_value=0) -> None:
+    """MODBUS TCP MASTER WRITE REGISTER TO PLC"""
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 0
+        tx_protocol_id = 0
+        tx_message_length = 9
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 16  #Write multiple holding registers
+        tx_register_address = int(register_address) & 0xFFFF  #Limit address
+        tx_register_count = 1
+        tx_byte_count = 2
+        tx_register_value = int(register_value) & 0xFFFF  #Limit value
+        tx_adu = struct.pack(">HHHBBHHBH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                             tx_modbus_function, tx_register_address, tx_register_count, tx_byte_count,
+                             tx_register_value)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
+         rx_register_address, rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
+        client_socket.close()
+        client_socket.__del__()
+        return
+    except BaseException:
+        print("ERROR: MODBUS_TCP_client_write_multiple_holding_register_uint16()")
+        client_socket.close()
+        client_socket.__del__()
+    return
+
+
+def modbus_tcp_client_read_input_register_int16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                register_address=0) -> int:
+    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 1
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 4  #read_input_register
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                             tx_modbus_function, tx_register_address, tx_register_count)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
+         rx_register_value) = struct.unpack(">HHHBBBh", rx_adu)
+        client_socket.close()
+        client_socket.__del__()
+        return rx_register_value
+    except BaseException:
+        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+        client_socket.close()
+        client_socket.__del__()
+        return 0
+
+
+def modbus_tcp_client_read_input_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                 register_address=0) -> int:
+    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 1
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 4  #read_input_register
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
+                             tx_modbus_function, tx_register_address, tx_register_count)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
+         rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
+        client_socket.close()
+        client_socket.__del__()
+        return rx_register_value
+    except BaseException:
+        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+        client_socket.close()
+        client_socket.__del__()
+        return 0
+
+
+class ModbusTcpMaster(object):
+
+    def __init__(self) -> None:
+        self.MW = array.array('H', [0] * 65536)  #MW[0]...MW[65535] uint16
+        self.Transaction_counter = 0
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        return
+
+    def start_tcp_client(self, ip_address='127.0.0.1', tcp_port=502) -> None:
+        self.client_socket.connect((ip_address, tcp_port))
+        return
+
+    def __del__(self) -> None:
+        self.client_socket.close()
+        self.client_socket.__del__()  # TODO
+        del self  # TODO
+        return
+
+    def get_mw(self, mw_address) -> int:
+        return self.MW[(mw_address & 0xFFFF)]
+
+    def set_mw(self, mw_address, mw_value) -> None:
+        self.MW[(mw_address & 0xFFFF)] = mw_value & 0xFFFF
+        return
+
+    def read_holding_register_uint16(self, modbus_address=1, register_address=0) -> int:
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 3  #Read holding registers
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_adu = struct.pack(">HHHBBHH",
+                             tx_transaction_id,
+                             tx_protocol_id,
+                             tx_message_length,
+                             tx_modbus_address,
+                             tx_modbus_function,
+                             tx_register_address,
+                             tx_register_count)
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 = Ethernet MTU size
+        error = (len(rx_adu) != 11)  #11 byte OK
+        if not error:
+            (rx_transaction_id,
+             rx_protocol_id,
+             rx_message_length,
+             rx_modbus_address,
+             rx_modbus_function,
+             rx_byte_count,
+             rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
+            error = error or (rx_transaction_id != tx_transaction_id)
+            error = error or (rx_protocol_id != tx_protocol_id)
+            error = error or (rx_message_length != tx_register_count * 2 + 3)
+            error = error or (rx_modbus_address != tx_modbus_address)
+            error = error or (rx_modbus_function != tx_modbus_function)
+            error = error or (rx_byte_count != tx_register_count * 2)
+            if not error:
+                register_value = rx_register_value
+            else:
+                print("error read holding register")
+                print(tx_adu)
+                print(rx_adu)
+                register_value = 0
+        else:
+            print("error read holding register")
+            print(tx_adu)
+            print(rx_adu)
+            register_value = 0
+        return register_value
+
+    def read_holding_register_float32(self, modbus_address=1, register_address=0) -> float:
+        """use Register_address and Register_address + 1"""
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 3  #Read holding registers
+        tx_register_address = register_address
+        tx_register_count = 2
+        tx_adu = struct.pack(">HHHBBHH",
+                             tx_transaction_id,
+                             tx_protocol_id,
+                             tx_message_length,
+                             tx_modbus_address,
+                             tx_modbus_function,
+                             tx_register_address,
+                             tx_register_count)
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 = Ethernet MTU size
+        error = (len(rx_adu) != 13)  #13 byte OK
+        if not error:
+            (rx_transaction_id,
+             rx_protocol_id,
+             rx_message_length,
+             rx_modbus_address,
+             rx_modbus_function,
+             rx_byte_count,
+             rx_register_value1,
+             rx_register_value2) = struct.unpack(">HHHBBBHH", rx_adu)
+            error = error or (rx_transaction_id != tx_transaction_id)
+            error = error or (rx_protocol_id != tx_protocol_id)
+            error = error or (rx_message_length != tx_register_count * 2 + 3)
+            error = error or (rx_modbus_address != tx_modbus_address)
+            error = error or (rx_modbus_function != tx_modbus_function)
+            error = error or (rx_byte_count != tx_register_count * 2)
+            if not error:
+                decode_float32 = struct.unpack(">f", struct.pack(">HH", rx_register_value2, rx_register_value1))
+                register_value = decode_float32[0]
+            else:
+                print("error read holding register")
+                print(tx_adu)
+                print(rx_adu)
+                register_value = 0.0
+        else:
+            print("error read holding register")
+            print(tx_adu)
+            print(rx_adu)
+            register_value = 0.0
+        return register_value
+
+    def write_multiple_holding_register_uint16(self, modbus_address=1, register_address=0, register_value=0) -> bool:
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 9
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 16  #Write multiple holding registers
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_byte_count = 2
+        tx_register_value = register_value
+        tx_adu = struct.pack(">HHHBBHHBH",
+                             tx_transaction_id,
+                             tx_protocol_id,
+                             tx_message_length,
+                             tx_modbus_address,
+                             tx_modbus_function,
+                             tx_register_address,
+                             tx_register_count,
+                             tx_byte_count,
+                             tx_register_value)
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 Ethernet MTU size
+        error = (len(rx_adu) != 12)  #12 byte OK
+        if not error:
+            (rx_transaction_id,
+             rx_protocol_id,
+             rx_message_length,
+             rx_modbus_address,
+             rx_modbus_function,
+             rx_register_address,
+             rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
+            error = error or (rx_transaction_id != tx_transaction_id)
+            error = error or (rx_protocol_id != tx_protocol_id)
+            error = error or (rx_message_length != 6)
+            error = error or (rx_modbus_address != tx_modbus_address)
+            error = error or (rx_modbus_function != tx_modbus_function)
+            error = error or (rx_register_count != tx_register_count)
+            if error:
+                print("error write multiple holding register")
+                print(tx_adu)
+                print(rx_adu)
+        else:
+            print("error write multiple holding register")
+            print(tx_adu)
+            print(rx_adu)
+            error = True
+        return error
+
+    def write_multiple_holding_register_float32(self, modbus_address=1, register_address=0, register_value=0.0) -> bool:
+        """use Register_address and Register_address + 1"""
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 11
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 16  #Write multiple holding registers
+        tx_register_address = register_address
+        tx_register_count = 2
+        tx_byte_count = 4
+        tx_register_value = register_value
+        (tx_register_value2, tx_register_value1) = struct.unpack(">HH", struct.pack(">f", register_value))
+        tx_adu = struct.pack(">HHHBBHHBHH",
+                             tx_transaction_id,
+                             tx_protocol_id,
+                             tx_message_length,
+                             tx_modbus_address,
+                             tx_modbus_function,
+                             tx_register_address,
+                             tx_register_count,
+                             tx_byte_count,
+                             tx_register_value1,
+                             tx_register_value2)
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 Ethernet MTU size
+        error = (len(rx_adu) != 12)  #12 byte OK
+        if not error:
+            (rx_transaction_id,
+             rx_protocol_id,
+             rx_message_length,
+             rx_modbus_address,
+             rx_modbus_function,
+             rx_register_address,
+             rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
+            error = error or (rx_transaction_id != tx_transaction_id)
+            error = error or (rx_protocol_id != tx_protocol_id)
+            error = error or (rx_message_length != 6)
+            error = error or (rx_modbus_address != tx_modbus_address)
+            error = error or (rx_modbus_function != tx_modbus_function)
+            error = error or (rx_register_count != tx_register_count)
+            if error:
+                print("error write multiple holding register")
+                print(tx_adu)
+                print(rx_adu)
+        else:
+            print("error write multiple holding register")
+            print(tx_adu)
+            print(rx_adu)
+            error = True
+        return error
+
+    def write_single_register(self, modbus_address=1, register_address=0, register_value=0) -> bool:
+        """uint16 Register_value"""
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 6  #write_single_register
+        tx_register_address = register_address
+        tx_register_value = register_value
+        tx_mbap = struct.pack(">HHHB", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address)
+        tx_pdu = struct.pack(">BHH", tx_modbus_function, tx_register_address, tx_register_value)
+        tx_adu = tx_mbap + tx_pdu
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 Ethernet MTU size
+        error = (len(rx_adu) != 12)  #12 byte OK
+        if not error:
+            error = (rx_adu != tx_adu)
+            if error:
+                print("error write single register")
+                print(tx_adu)
+                print(rx_adu)
+        else:
+            print("error write single register")
+            print(tx_adu)
+            print(rx_adu)
+            error = True
+        return error
+
+    def read_holding_registers(self, modbus_address=1, register_address=0, register_count=1) -> None:
+        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
+        tx_transaction_id = self.Transaction_counter
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address & 0xFF
+        tx_modbus_function = 3  #Read holding registers
+        tx_register_address = int(register_address) & 0xFFFF
+        tx_register_count = int(register_count) & 0xFF  #1...127 Maximum
+        tx_mbap = struct.pack(">HHHB", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address)
+        tx_pdu = struct.pack(">BHH", tx_modbus_function, tx_register_address, tx_register_count)
+        tx_adu = tx_mbap + tx_pdu
+        self.client_socket.send(tx_adu)
+        rx_adu = self.client_socket.recv(1500)  #1500 Ethernet MTU size
+        error = (len(rx_adu) != register_count * 2 + 9)  #Check len ADU
+        if not error:
+            rx_transaction_id = int((rx_adu[0] << 8) | rx_adu[1]) & 0xFFFF
+            rx_protocol_id = int((rx_adu[2] << 8) | rx_adu[3]) & 0xFFFF
+            rx_message_length = int((rx_adu[4] << 8) | rx_adu[5]) & 0xFFFF
+            rx_modbus_address = int(rx_adu[6]) & 0xFF
+            rx_modbus_function = int(rx_adu[7]) & 0xFF
+            rx_byte_count = int(rx_adu[8]) & 0xFF
+            error = error or (rx_transaction_id != tx_transaction_id)
+            error = error or (rx_protocol_id != tx_protocol_id)
+            error = error or (rx_message_length != tx_register_count * 2 + 3)
+            error = error or (rx_modbus_address != tx_modbus_address)
+            error = error or (rx_modbus_function != tx_modbus_function)
+            error = error or (rx_byte_count != tx_register_count * 2)
+            if not error:
+                for Counter in range(tx_register_count):  #Counter = 0...Register_count
+                    hi_byte = int(rx_adu[9 + Counter * 2]) & 0xFF
+                    lo_byte = int(rx_adu[10 + Counter * 2]) & 0xFF
+                    register_value = int((hi_byte << 8) | lo_byte) & 0xFFFF
+                    reg_adr = int(Counter + register_address) & 0xFFFF
+                    self.MW[reg_adr] = register_value
+            else:
+                print("error read holding register")
+        else:
+            print("error read holding register")
+        return
+
+
+def two_uint16_to_float32(register_value1: int = 0, register_value2: int = 0) -> float:
+    tmp = struct.unpack(">f", struct.pack(">HH", register_value2, register_value1))
+    return float(tmp[0])
+
+
+def _unit_test_() -> None:
+    print("TEST 1")
+    print("modbus_tcp_client_write_multiple_holding_register_uint16()")
+    mw0 = 333
+    modbus_tcp_client_write_multiple_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                             register_address=0, register_value=mw0)
+    print("send mw0 = ", mw0)
+    print("modbus_tcp_client_read_holding_register_uint16()")
+    mw0 = modbus_tcp_client_read_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
+                                                         register_address=0)
+    print("receive mw0 = ", mw0)
+    print("TEST 2")
+    print("TODO modbus_tcp_client_read_input_register_int16()")  # TODO
+    print("TODO modbus_tcp_client_read_input_register_uint16()")  # TODO
+    print("TODO ModbusTcpMaster.write_single_register()")  # TODO
+    plc1 = ModbusTcpMaster()
+    plc1.start_tcp_client(ip_address='127.0.0.1')
+    print("TEST 3")
+    mw1 = 777
+    print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
+    plc1.write_multiple_holding_register_uint16(register_address=1, register_value=mw1)
+    print("send mw1 =", mw1)
+    print("ModbusTcpMaster.read_holding_register_uint16()")
+    mw1 = plc1.read_holding_register_uint16(register_address=1)
+    print("receive mw1 =", mw1)
+    print("TEST 4")
+    mw2mw3 = -555.0
+    print("ModbusTcpMaster.write_multiple_holding_register_float32()")
+    plc1.write_multiple_holding_register_float32(register_address=2, register_value=mw2mw3)
+    print("send mw2mw3 =", mw2mw3)
+    print("ModbusTcpMaster.read_holding_register_float32()")
+    mw2mw3 = plc1.read_holding_register_float32(register_address=2)
+    print("receive mw2mw3 =", mw2mw3)
+    print("TEST 5")
+    print("ModbusTcpMaster.write_single_register()")
+    mw4 = 1234
+    mw5 = 4321
+    print("send mw4 =", mw4)
+    print("send mw5 =", mw5)
+    print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
+    plc1.write_multiple_holding_register_uint16(register_address=4, register_value=mw4)
+    plc1.write_multiple_holding_register_uint16(register_address=5, register_value=mw5)
+    plc1.read_holding_registers(register_address = 4, register_count = 2)
+    print("receive mw4 =", plc1.MW[4])
+    print("receive mw5 =", plc1.MW[5])
+    input("press any key for exit...")
+
+
+if __name__ == "__main__":
+    _unit_test_()
+
+"""
 
 ********************************************************************************************************************
 
@@ -175,423 +654,6 @@ PLC: 00 01 00 00 00 06 01 10 00 02 00 01 (Receive  byte HEX)
 ********************************************************************************************************************
 """
 
-import socket
-import struct
-import array
-
-def MODBUS_TCP_client_read_holding_register_uint16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0):
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
-    try:
-        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Client_socket.connect((IP_address, TCP_port))
-        Tx_Transaction_ID = 1
-        Tx_Protocol_ID = 0
-        Tx_Message_length = 6
-        Tx_MODBUS_address = MODBUS_address
-        Tx_MODBUS_function = 3
-        Tx_Register_address = Register_address
-        Tx_Register_count = 1
-        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
-        Client_socket.send(Tx_ADU)
-        Rx_ADU = Client_socket.recv(1500)
-        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Byte_count,Rx_Register_value) = struct.unpack(">HHHBBBH",Rx_ADU)
-        Client_socket.close()
-        Client_socket.__del__()
-        return Rx_Register_value
-    except:
-        print("ERROR: MODBUS_TCP_client_read_holding_register_uint16()")
-        Client_socket.close()
-        Client_socket.__del__()
-        return 0
-
-def MODBUS_TCP_client_write_multiple_holding_register_uint16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0, Register_value = 0):
-    """MODBUS TCP MASTER WRITE REGISTER TO PLC"""
-    try:
-        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Client_socket.connect((IP_address, TCP_port))
-        Tx_Transaction_ID   = 0
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 9
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 16 #Write multiple holding registers
-        Tx_Register_address = int(Register_address) & 0xFFFF #Limit address
-        Tx_Register_count   = 1
-        Tx_Byte_count       = 2
-        Tx_Register_value   = int(Register_value) & 0xFFFF #Limit value
-        Tx_ADU = struct.pack(">HHHBBHHBH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count,Tx_Byte_count,Tx_Register_value)
-        Client_socket.send(Tx_ADU)
-        Rx_ADU = Client_socket.recv(1500)
-        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Register_address,Rx_Register_count) = struct.unpack(">HHHBBHH",Rx_ADU)
-        Client_socket.close()
-        Client_socket.__del__()
-        return
-    except:
-        print("ERROR: MODBUS_TCP_client_write_multiple_holding_register_uint16()")
-        Client_socket.close()
-        Client_socket.__del__()
-    return
-
-def MODBUS_TCP_client_read_input_register_int16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0):
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
-    try:
-        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Client_socket.connect((IP_address, TCP_port))
-        Tx_Transaction_ID = 1
-        Tx_Protocol_ID = 0
-        Tx_Message_length = 6
-        Tx_MODBUS_address = MODBUS_address
-        Tx_MODBUS_function = 4 #read_input_register
-        Tx_Register_address = Register_address
-        Tx_Register_count = 1
-        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
-        Client_socket.send(Tx_ADU)
-        Rx_ADU = Client_socket.recv(1500)
-        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Byte_count,Rx_Register_value) = struct.unpack(">HHHBBBh",Rx_ADU)
-        Client_socket.close()
-        Client_socket.__del__()
-        return Rx_Register_value
-    except:
-        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
-        Client_socket.close()
-        Client_socket.__del__()
-        return 0
-
-def MODBUS_TCP_client_read_input_register_uint16(IP_address = '127.0.0.1', TCP_port = 502, MODBUS_address = 1, Register_address = 0):
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
-    try:
-        Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Client_socket.connect((IP_address, TCP_port))
-        Tx_Transaction_ID = 1
-        Tx_Protocol_ID = 0
-        Tx_Message_length = 6
-        Tx_MODBUS_address = MODBUS_address
-        Tx_MODBUS_function = 4 #read_input_register
-        Tx_Register_address = Register_address
-        Tx_Register_count = 1
-        Tx_ADU = struct.pack(">HHHBBHH",Tx_Transaction_ID,Tx_Protocol_ID,Tx_Message_length,Tx_MODBUS_address,Tx_MODBUS_function,Tx_Register_address,Tx_Register_count)
-        Client_socket.send(Tx_ADU)
-        Rx_ADU = Client_socket.recv(1500)
-        (Rx_Transaction_ID,Rx_Protocol_ID,Rx_Message_length,Rx_MODBUS_address,Rx_MODBUS_function,Rx_Byte_count,Rx_Register_value) = struct.unpack(">HHHBBBH",Rx_ADU)
-        Client_socket.close()
-        Client_socket.__del__()
-        return Rx_Register_value
-    except:
-        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
-        Client_socket.close()
-        Client_socket.__del__()
-        return 0
-
-class MODBUS_TCP_master(object):
-
-    def __init__(self):
-        self.MW = array.array('H', [0]*65536) #MW[0]...MW[65535] uint16
-        self.Transaction_counter = 0
-        return
-
-    def Start_TCP_client(self, IP_address = '127.0.0.1', TCP_port = 502):
-        self.Client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.Client_socket.connect((IP_address, TCP_port))
-        return
-
-    def Stop_TCP_client(self):
-        self.Client_socket.close()
-        self.Client_socket.__del__()
-        return
-
-    def Get_MW(self, MW_address):
-        return self.MW[(MW_address & 0xFFFF)]
-
-    def Set_MW(self, MW_address, MW_value):
-        self.MW[(MW_address & 0xFFFF)] = MW_value & 0xFFFF
-        return
-
-    def Read_holding_register_uint16(self, MODBUS_address = 1, Register_address = 0):
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 6
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 3 #Read holding registers
-        Tx_Register_address = Register_address
-        Tx_Register_count   = 1
-        Tx_ADU = struct.pack(">HHHBBHH",
-                             Tx_Transaction_ID,
-                             Tx_Protocol_ID,
-                             Tx_Message_length,
-                             Tx_MODBUS_address,
-                             Tx_MODBUS_function,
-                             Tx_Register_address,
-                             Tx_Register_count)
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 = Ethernet MTU size
-        Error = (len(Rx_ADU) != 11) #11 byte OK
-        if (Error == False):
-            (Rx_Transaction_ID,
-             Rx_Protocol_ID,
-             Rx_Message_length,
-             Rx_MODBUS_address,
-             Rx_MODBUS_function,
-             Rx_Byte_count,
-             Rx_Register_value) = struct.unpack(">HHHBBBH",Rx_ADU)
-            Error = Error or (Rx_Transaction_ID  != Tx_Transaction_ID         )
-            Error = Error or (Rx_Protocol_ID     != Tx_Protocol_ID            )
-            Error = Error or (Rx_Message_length  != Tx_Register_count * 2 + 3 )
-            Error = Error or (Rx_MODBUS_address  != Tx_MODBUS_address         )
-            Error = Error or (Rx_MODBUS_function != Tx_MODBUS_function        )
-            Error = Error or (Rx_Byte_count      != Tx_Register_count * 2     )
-            if (Error == False):
-                Register_value = Rx_Register_value
-            else:
-                print("Error read holding register")
-                print(Tx_ADU)
-                print(Rx_ADU)
-                Register_value = 0
-        else:
-            print("Error read holding register")
-            print(Tx_ADU)
-            print(Rx_ADU)
-            Register_value = 0
-        return Register_value
-
-    def Read_holding_register_float32(self, MODBUS_address = 1, Register_address = 0):
-        """use Register_address and Register_address + 1"""
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 6
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 3 #Read holding registers
-        Tx_Register_address = Register_address
-        Tx_Register_count   = 2
-        Tx_ADU = struct.pack(">HHHBBHH",
-                             Tx_Transaction_ID,
-                             Tx_Protocol_ID,
-                             Tx_Message_length,
-                             Tx_MODBUS_address,
-                             Tx_MODBUS_function,
-                             Tx_Register_address,
-                             Tx_Register_count)
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 = Ethernet MTU size
-        Error = (len(Rx_ADU) != 13) #13 byte OK
-        if (Error == False):
-            (Rx_Transaction_ID,
-             Rx_Protocol_ID,
-             Rx_Message_length,
-             Rx_MODBUS_address,
-             Rx_MODBUS_function,
-             Rx_Byte_count,
-             Rx_Register_value1,
-             Rx_Register_value2) = struct.unpack(">HHHBBBHH",Rx_ADU)
-            Error = Error or (Rx_Transaction_ID  != Tx_Transaction_ID         )
-            Error = Error or (Rx_Protocol_ID     != Tx_Protocol_ID            )
-            Error = Error or (Rx_Message_length  != Tx_Register_count * 2 + 3 )
-            Error = Error or (Rx_MODBUS_address  != Tx_MODBUS_address         )
-            Error = Error or (Rx_MODBUS_function != Tx_MODBUS_function        )
-            Error = Error or (Rx_Byte_count      != Tx_Register_count * 2     )
-            if (Error == False):
-                Decode_float32 = struct.unpack(">f",struct.pack(">HH",Rx_Register_value2,Rx_Register_value1))
-                Register_value = Decode_float32[0]
-            else:
-                print("Error read holding register")
-                print(Tx_ADU)
-                print(Rx_ADU)
-                Register_value = 0.0
-        else:
-            print("Error read holding register")
-            print(Tx_ADU)
-            print(Rx_ADU)
-            Register_value = 0.0
-        return Register_value
-
-    def Write_multiple_holding_register_uint16(self, MODBUS_address = 1, Register_address = 0, Register_value = 0):
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 9
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 16 #Write multiple holding registers
-        Tx_Register_address = Register_address
-        Tx_Register_count   = 1
-        Tx_Byte_count       = 2
-        Tx_Register_value   = Register_value
-        Tx_ADU = struct.pack(">HHHBBHHBH",
-                             Tx_Transaction_ID,
-                             Tx_Protocol_ID,
-                             Tx_Message_length,
-                             Tx_MODBUS_address,
-                             Tx_MODBUS_function,
-                             Tx_Register_address,
-                             Tx_Register_count,
-                             Tx_Byte_count,
-                             Tx_Register_value)
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 Ethernet MTU size
-        Error = (len(Rx_ADU) != 12) #12 byte OK
-        if (Error == False):
-            (Rx_Transaction_ID,
-             Rx_Protocol_ID,
-             Rx_Message_length,
-             Rx_MODBUS_address,
-             Rx_MODBUS_function,
-             Rx_Register_address,
-             Rx_Register_count) = struct.unpack(">HHHBBHH",Rx_ADU)
-            Error = Error or (Rx_Transaction_ID  != Tx_Transaction_ID )
-            Error = Error or (Rx_Protocol_ID     != Tx_Protocol_ID    )
-            Error = Error or (Rx_Message_length  != 6                 )
-            Error = Error or (Rx_MODBUS_address  != Tx_MODBUS_address )
-            Error = Error or (Rx_MODBUS_function != Tx_MODBUS_function)
-            Error = Error or (Rx_Register_count  != Tx_Register_count )
-            if (Error == True):
-                print("Error write multiple holding register")
-                print(Tx_ADU)
-                print(Rx_ADU)
-        else:
-            print("Error write multiple holding register")
-            print(Tx_ADU)
-            print(Rx_ADU)
-            Error = True
-        return Error
-
-    def Write_multiple_holding_register_float32(self, MODBUS_address = 1, Register_address = 0, Register_value = 0.0):
-        """use Register_address and Register_address + 1"""
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 11
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 16 #Write multiple holding registers
-        Tx_Register_address = Register_address
-        Tx_Register_count   = 2
-        Tx_Byte_count       = 4
-        Tx_Register_value   = Register_value
-        (Tx_Register_value2, Tx_Register_value1) = struct.unpack(">HH",struct.pack(">f",Register_value))
-        Tx_ADU = struct.pack(">HHHBBHHBHH",
-                             Tx_Transaction_ID,
-                             Tx_Protocol_ID,
-                             Tx_Message_length,
-                             Tx_MODBUS_address,
-                             Tx_MODBUS_function,
-                             Tx_Register_address,
-                             Tx_Register_count,
-                             Tx_Byte_count,
-                             Tx_Register_value1,
-                             Tx_Register_value2)
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 Ethernet MTU size
-        Error = (len(Rx_ADU) != 12) #12 byte OK
-        if (Error == False):
-            (Rx_Transaction_ID,
-             Rx_Protocol_ID,
-             Rx_Message_length,
-             Rx_MODBUS_address,
-             Rx_MODBUS_function,
-             Rx_Register_address,
-             Rx_Register_count) = struct.unpack(">HHHBBHH",Rx_ADU)
-            Error = Error or (Rx_Transaction_ID  != Tx_Transaction_ID )
-            Error = Error or (Rx_Protocol_ID     != Tx_Protocol_ID    )
-            Error = Error or (Rx_Message_length  != 6                 )
-            Error = Error or (Rx_MODBUS_address  != Tx_MODBUS_address )
-            Error = Error or (Rx_MODBUS_function != Tx_MODBUS_function)
-            Error = Error or (Rx_Register_count  != Tx_Register_count )
-            if (Error == True):
-                print("Error write multiple holding register")
-                print(Tx_ADU)
-                print(Rx_ADU)
-        else:
-            print("Error write multiple holding register")
-            print(Tx_ADU)
-            print(Rx_ADU)
-            Error = True
-        return Error
-
-    def Write_single_register(self, MODBUS_address = 1, Register_address = 0, Register_value = 0):
-        """uint16 Register_value"""
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 6
-        Tx_MODBUS_address   = MODBUS_address
-        Tx_MODBUS_function  = 6 #write_single_register
-        Tx_Register_address = Register_address
-        Tx_Register_value   = Register_value
-        Tx_MBAP = struct.pack(">HHHB", Tx_Transaction_ID, Tx_Protocol_ID, Tx_Message_length, Tx_MODBUS_address)
-        Tx_PDU = struct.pack(">BHH", Tx_MODBUS_function, Tx_Register_address, Tx_Register_value)
-        Tx_ADU = Tx_MBAP + Tx_PDU
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 Ethernet MTU size
-        Error = (len(Rx_ADU) != 12) #12 byte OK
-        if (Error == False):
-            Error = (Rx_ADU != Tx_ADU)
-            if (Error == True):
-                print("Error write single register")
-                print(Tx_ADU)
-                print(Rx_ADU)
-        else:
-            print("Error write single register")
-            print(Tx_ADU)
-            print(Rx_ADU)
-            Error = True
-        return Error
-
-    def Read_holding_registers(self, MODBUS_address = 1, Register_address = 0, Register_count = 1):
-        self.Transaction_counter = (self.Transaction_counter + 1) & 0xFFFF
-        Tx_Transaction_ID   = self.Transaction_counter
-        Tx_Protocol_ID      = 0
-        Tx_Message_length   = 6
-        Tx_MODBUS_address   = MODBUS_address & 0xFF
-        Tx_MODBUS_function  = 3 #Read holding registers
-        Tx_Register_address = int(Register_address) & 0xFFFF
-        Tx_Register_count   = int(Register_count) & 0xFF #1...127 Maximum
-        Tx_MBAP = struct.pack(">HHHB", Tx_Transaction_ID, Tx_Protocol_ID, Tx_Message_length, Tx_MODBUS_address)
-        Tx_PDU = struct.pack(">BHH", Tx_MODBUS_function, Tx_Register_address, Tx_Register_count)
-        Tx_ADU = Tx_MBAP + Tx_PDU
-        self.Client_socket.send(Tx_ADU)
-        Rx_ADU = self.Client_socket.recv(1500) #1500 Ethernet MTU size
-        Error = (len(Rx_ADU) != Register_count * 2 + 9)#Check len ADU
-        if(Error == False):
-            Rx_Transaction_ID  = int((Rx_ADU[0] << 8 ) | Rx_ADU[1]) & 0xFFFF
-            Rx_Protocol_ID     = int((Rx_ADU[2] << 8 ) | Rx_ADU[3]) & 0xFFFF
-            Rx_Message_length  = int((Rx_ADU[4] << 8 ) | Rx_ADU[5]) & 0xFFFF
-            Rx_MODBUS_address  = int(Rx_ADU[6]) & 0xFF
-            Rx_MODBUS_function = int(Rx_ADU[7]) & 0xFF
-            Rx_Byte_count      = int(Rx_ADU[8]) & 0xFF
-            Error = Error or (Rx_Transaction_ID  != Tx_Transaction_ID         )
-            Error = Error or (Rx_Protocol_ID     != Tx_Protocol_ID            )
-            Error = Error or (Rx_Message_length  != Tx_Register_count * 2 + 3 )
-            Error = Error or (Rx_MODBUS_address  != Tx_MODBUS_address         )
-            Error = Error or (Rx_MODBUS_function != Tx_MODBUS_function        )
-            Error = Error or (Rx_Byte_count      != Tx_Register_count * 2     )
-            if(Error == False):
-                for Counter in range(Tx_Register_count): #Counter = 0...Register_count
-                    Hi_byte = int(Rx_ADU[9  + Counter * 2]) & 0xFF
-                    Lo_byte = int(Rx_ADU[10 + Counter * 2]) & 0xFF
-                    Register_value = int((Hi_byte << 8 ) | Lo_byte) & 0xFFFF
-                    Reg_adr = int(Counter + Register_address) & 0xFFFF
-                    self.MW[Reg_adr] = Register_value
-            else:
-                print("Error read holding register")
-        else:
-                print("Error read holding register")
-        return
-
-def Two_uint16_to_float32(Register_value1, Register_value2):
-    tmp = struct.unpack(">f",struct.pack(">HH", Register_value2, Register_value1))
-    return tmp[0]
-
-def Unit_test():
-    PLC1 = MODBUS_TCP_master()
-    PLC1.Start_TCP_client(IP_address = '127.0.0.1')
-    while True:
-        MW7 = PLC1.Read_holding_register_uint16(Register_address = 7)
-        print(MW7)
-        MW7 = (MW7 + 1) & 0xFFFF
-        MW7 = PLC1.Write_multiple_holding_register_uint16(Register_address = 7, Register_value = MW7)
-    PLC1.Stop_TCP_client()
-
-if (__name__ == '__main__'):
-    Unit_test()
-
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
 # Contacts: DIY.PLC.314@gmail.com
@@ -605,6 +667,3 @@ if (__name__ == '__main__'):
 # https://3dtoday.ru/3d-models/mechanical-parts/body/korpus-na-din-reiku
 # https://t.me/DIY_PLC
 
-# Спасибо за лекции.
-# https://www.youtube.com/@unx7784/playlists
-# https://www.youtube.com/@tkhirianov/playlists
