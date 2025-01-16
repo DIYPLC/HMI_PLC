@@ -75,7 +75,7 @@ def Unit_test():
     return
 
 
-if (__name__ == "__main__"):
+if __name__ == "__main__":
     Unit_test()
     input("press any key for exit...")
 

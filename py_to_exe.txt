@@ -1,3 +1,3 @@
 Convert *.py to *.exe
 cmd>pip install pyinstaller
-cmd>pyinstaller -F CLI_PLC_link_test.pyw
+cmd>pyinstaller -F test.pyw
