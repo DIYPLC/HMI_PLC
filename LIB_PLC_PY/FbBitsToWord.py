@@ -51,37 +51,37 @@ class FbBitsToWord(object):
     def __call__(self) -> None:
         self.Out = 0
         if self.In0:
-            self.Out = (self.Out | 0b0000_0000_0000_0001)
+            self.Out = (self.Out | 0b0000000000000001)
         if self.In1:
-            self.Out = (self.Out | 0b0000_0000_0000_0010)
+            self.Out = (self.Out | 0b0000000000000010)
         if self.In2:
-            self.Out = (self.Out | 0b0000_0000_0000_0100)
+            self.Out = (self.Out | 0b0000000000000100)
         if self.In3:
-            self.Out = (self.Out | 0b0000_0000_0000_1000)
+            self.Out = (self.Out | 0b0000000000001000)
         if self.In4:
-            self.Out = (self.Out | 0b0000_0000_0001_0000)
+            self.Out = (self.Out | 0b0000000000010000)
         if self.In5:
-            self.Out = (self.Out | 0b0000_0000_0010_0000)
+            self.Out = (self.Out | 0b0000000000100000)
         if self.In6:
-            self.Out = (self.Out | 0b0000_0000_0100_0000)
+            self.Out = (self.Out | 0b0000000001000000)
         if self.In7:
-            self.Out = (self.Out | 0b0000_0000_1000_0000)
+            self.Out = (self.Out | 0b0000000010000000)
         if self.In8:
-            self.Out = (self.Out | 0b0000_0001_0000_0000)
+            self.Out = (self.Out | 0b0000000100000000)
         if self.In9:
-            self.Out = (self.Out | 0b0000_0010_0000_0000)
+            self.Out = (self.Out | 0b0000001000000000)
         if self.In10:
-            self.Out = (self.Out | 0b0000_0100_0000_0000)
+            self.Out = (self.Out | 0b0000010000000000)
         if self.In11:
-            self.Out = (self.Out | 0b0000_1000_0000_0000)
+            self.Out = (self.Out | 0b0000100000000000)
         if self.In12:
-            self.Out = (self.Out | 0b0001_0000_0000_0000)
+            self.Out = (self.Out | 0b0001000000000000)
         if self.In13:
-            self.Out = (self.Out | 0b0010_0000_0000_0000)
+            self.Out = (self.Out | 0b0010000000000000)
         if self.In14:
-            self.Out = (self.Out | 0b0100_0000_0000_0000)
+            self.Out = (self.Out | 0b0100000000000000)
         if self.In15:
-            self.Out = (self.Out | 0b1000_0000_0000_0000)
+            self.Out = (self.Out | 0b1000000000000000)
         return
 
     def __del__(self) -> None:

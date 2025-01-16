@@ -36,12 +36,12 @@ def modbus_tcp_client_read_holding_register_uint16(ip_address='127.0.0.1', tcp_p
         (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
          rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return rx_register_value
     except BaseException:
         print("ERROR: MODBUS_TCP_client_read_holding_register_uint16()")
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return 0
 
 
@@ -68,12 +68,12 @@ def modbus_tcp_client_write_multiple_holding_register_uint16(ip_address='127.0.0
         (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
          rx_register_address, rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return
     except BaseException:
         print("ERROR: MODBUS_TCP_client_write_multiple_holding_register_uint16()")
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
     return
 
 
@@ -97,12 +97,12 @@ def modbus_tcp_client_read_input_register_int16(ip_address='127.0.0.1', tcp_port
         (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
          rx_register_value) = struct.unpack(">HHHBBBh", rx_adu)
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return rx_register_value
     except BaseException:
         print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return 0
 
 
@@ -126,12 +126,12 @@ def modbus_tcp_client_read_input_register_uint16(ip_address='127.0.0.1', tcp_por
         (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
          rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return rx_register_value
     except BaseException:
         print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
         client_socket.close()
-        client_socket.__del__()
+        del client_socket
         return 0
 
 
@@ -149,8 +149,7 @@ class ModbusTcpMaster(object):
 
     def __del__(self) -> None:
         self.client_socket.close()
-        self.client_socket.__del__()  # TODO
-        del self  # TODO
+        del self
         return
 
     def get_mw(self, mw_address) -> int:

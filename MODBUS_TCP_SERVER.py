@@ -3,6 +3,7 @@
 
 """
 MODBUS TCP SERVER
+Learn more at: http://www.modbus.org/
 http://www.binarytides.com/python-socket-server-code-example/
 """
 

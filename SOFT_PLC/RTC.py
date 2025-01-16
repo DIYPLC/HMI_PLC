@@ -62,7 +62,7 @@ class Rtc(object):
         self.Seconds  = rtc_struct.tm_sec  #Текущее время- Секунда 0...61?.
         self.Weekday = rtc_struct.tm_wday #Текущее время- День недели 0...6 пн...вс.
         self.Yearday = rtc_struct.tm_yday #Текущее время- День в году 1...366.
-        self.rtc_label: str = str(time.strftime("%d-%b-%Y %H:%M:%S"))
+        self.rtc_label = str(time.strftime("%d-%b-%Y %H:%M:%S"))
         return
 
     def __del__(self) -> None:
