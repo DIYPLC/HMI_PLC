@@ -14,22 +14,25 @@ import time
 import socket
 import struct
 import array
+import ctypes
 from RTC import Rtc
 from Write_to_Error_file import write_to_error_file
 
+
 def error_generator():
     return 0 / 0
+
 
 class GlobalVar(object):
 
     def __init__(self) -> None:
         """ GLOBAL VAR """
-        self.time_sample_ns: int = 0
-        self.Reset: bool = True
+        self.time_sample_ns = int(0)
+        self.Reset = bool(True)
         """ TODO MODBUS TCP CLIENT """
-        self.ADR1_MW0: int = 0  # MODBUS TCP Holding register int16
+        self.ADR1_MW0 = int(0)  # MODBUS TCP Holding register int16
         """ USER VARIABLES """
-        self.user_timer_1_ns :int = 0
+        self.user_timer_1_ns = int(0)
         """ GLOBAL CLASS """
         try:
             self.rtc = Rtc()
@@ -47,29 +50,23 @@ class GlobalVar(object):
         return
 
 
-def task_cyclic(reset :bool = False, time_sample_ns :int = 0) -> None: # LIB_PLC style.
+def task_cyclic(reset: bool = False, time_sample_ns: int = 0) -> None:  # LIB_PLC style.
     GV.user_timer_1_ns = GV.user_timer_1_ns + time_sample_ns
-    user_timer_1_s :float = GV.user_timer_1_ns / 10**9
+    user_timer_1_s = float(GV.user_timer_1_ns / 10 ** 9)
     print("user_timer_1_s", user_timer_1_s)
     return
 
-def setup() -> None:  # Arduino style.
-    task_cyclic(reset = GV.Reset, time_sample_ns= GV.rtc.time_sample_ns)
-    return
 
-def loop() -> None:  # Arduino style.
-    time.sleep(0.5)  # TODO DEBUG
-    GV() # Update sample time and reset flag
+def main() -> None:  # GCC style.
     task_cyclic(reset=GV.Reset, time_sample_ns=GV.rtc.time_sample_ns)
-    return
-
-def main() -> None: # GCC style.
-    setup()
     while True:
-        loop()
+        time.sleep(0.5)  # TODO DEBUG
+        GV()  # Update sample time and reset flag
+        task_cyclic(reset=GV.Reset, time_sample_ns=GV.rtc.time_sample_ns)
+
 
 if __name__ == "__main__":
-    debug_mode :bool = False # TODO DEBUG
+    debug_mode: bool = False  # TODO DEBUG
     if debug_mode:
         GV = GlobalVar()
         main()
@@ -84,7 +81,6 @@ if __name__ == "__main__":
                 write_to_error_file("ERROR __main__.py")
             time.sleep(10)  # second
 
-
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA
 # Contacts: DIY.PLC.314@gmail.com
@@ -97,4 +93,3 @@ if __name__ == "__main__":
 # https://oshwlab.com/diy.plc.314/PLC_HW1_SW1
 # https://3dtoday.ru/3d-models/mechanical-parts/body/korpus-na-din-reiku
 # https://t.me/DIY_PLC
-

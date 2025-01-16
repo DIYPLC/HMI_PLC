@@ -7,35 +7,39 @@ Real time for soft PLC
 
 import time
 
+def _get_system_time_ns_() -> int:
+    # system_time_ns = time.time_ns() # Точнее
+    system_time_ns = time.monotonic_ns()  # Надежнее
+    return int(system_time_ns)
 
 class Rtc(object):
 
     def __init__(self) -> None:
         """ Time sample ns. """
-        self._time_current_ns_ :int = self._get_system_time_ns_()
-        self._time_previous_ns_ :int = self._time_current_ns_
-        self.time_sample_ns :int = self._time_current_ns_ - self._time_previous_ns_
-        self.time_sample_max_ns :int = 0
+        self._time_current_ns_ = int(_get_system_time_ns_())
+        self._time_previous_ns_ = int(self._time_current_ns_)
+        self.time_sample_ns = int(self._time_current_ns_ - self._time_previous_ns_)
+        self.time_sample_max_ns = int(0)
         """ Uptime PLC """
-        self.Uptime_ns :int = 0
-        self.Uptime_s :int = 0
-        self.Uptime_day :int = 0
+        self.Uptime_ns = int(0)
+        self.Uptime_s = int(0)
+        self.Uptime_day = int(0)
         """ PC RTC. """
         rtc_struct = time.localtime()
-        self.Year    :int = rtc_struct.tm_year #Текущее время- Год 20xx.
-        self.Month   :int = rtc_struct.tm_mon  #Текущее время- Месяц 1...12.
-        self.Day     :int = rtc_struct.tm_mday #Текущее время- День 1...31.
-        self.Hour    :int = rtc_struct.tm_hour #Текущее время- Час 0...23.
-        self.Minutes  :int = rtc_struct.tm_min  #Текущее время- Минута 0...59.
-        self.Seconds  :int = rtc_struct.tm_sec  #Текущее время- Секунда 0...61?.
-        self.Weekday :int = rtc_struct.tm_wday #Текущее время- День недели 0...6 пн...вс.
-        self.Yearday :int = rtc_struct.tm_yday #Текущее время- День в году 1...366.
-        self.rtc_label :str = str(time.strftime("%d-%b-%Y %H:%M:%S"))
+        self.Year     = int(rtc_struct.tm_year) #Текущее время- Год 20xx.
+        self.Month    = int(rtc_struct.tm_mon)  #Текущее время- Месяц 1...12.
+        self.Day      = int(rtc_struct.tm_mday) #Текущее время- День 1...31.
+        self.Hour     = int(rtc_struct.tm_hour) #Текущее время- Час 0...23.
+        self.Minutes  = int(rtc_struct.tm_min)  #Текущее время- Минута 0...59.
+        self.Seconds  = int(rtc_struct.tm_sec)  #Текущее время- Секунда 0...61?.
+        self.Weekday  = int(rtc_struct.tm_wday) #Текущее время- День недели 0...6 пн...вс.
+        self.Yearday  = int(rtc_struct.tm_yday) #Текущее время- День в году 1...366.
+        self.rtc_label  = str(time.strftime("%d-%b-%Y %H:%M:%S"))
         return
 
     def __call__(self) -> None:
         """ Time sample ns. """
-        self._time_current_ns_ = self._get_system_time_ns_()
+        self._time_current_ns_ = _get_system_time_ns_()
         if self._time_current_ns_ >= self._time_previous_ns_:
             self.time_sample_ns = self._time_current_ns_ - self._time_previous_ns_
         else:
@@ -61,24 +65,19 @@ class Rtc(object):
         self.rtc_label: str = str(time.strftime("%d-%b-%Y %H:%M:%S"))
         return
 
-    @staticmethod
-    def _get_system_time_ns_() -> int:
-        #system_time_ns :int = time.time_ns() # Точнее
-        system_time_ns :int = time.monotonic_ns()  # Надежнее
-        return system_time_ns
-
     def __del__(self) -> None:
         del self
         return
 
-def unit_test() -> None:
+def _unit_test_() -> None:
     print("Test start time", Rtc1.rtc_label)
     Rtc1()
     print("Rtc1.time_sample_ns =", Rtc1.time_sample_ns)
+    input("press any key...")
 
 if __name__ == "__main__":
     Rtc1 = Rtc()
-    unit_test()
+    _unit_test_()
 
 
 # @COPYLEFT ALL WRONGS RESERVED :)
