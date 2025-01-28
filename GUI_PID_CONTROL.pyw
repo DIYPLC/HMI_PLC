@@ -330,8 +330,8 @@ if __name__ == "__main__":
     GV = GlobalVar()
     GUI = GlobalVarGui()
     PLC = ModbusTcpMaster()
-    PLC.start_tcp_client(ip_address='192.168.1.84') # Connect to PLC
-    #PLC.start_tcp_client() # Connect to simulator
+    #PLC.start_tcp_client(ip_address='192.168.1.84') # Connect to PLC
+    PLC.start_tcp_client() # Connect to simulator
     read_plc_tags()
     GUI.EntrySP_value.set(float32_to_string(float32_value=GV.HmiSP, accuracy=2))
     GUI.EntryPV_value.set(float32_to_string(float32_value=GV.HmiPV, accuracy=2))
