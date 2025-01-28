@@ -6,16 +6,6 @@ import socket
 import struct
 import time
 
-#IP_ADR_PLC = '192.168.1.84' #PLC DELTA
-IP_ADR_PLC = '127.0.0.1'  #SIMULATOR
-MODBUS_ADR_PLC = 1
-ADR_REG_HmiSP = 4506
-ADR_REG_HmiPV = 4508
-ADR_REG_HmiOP = 4510
-ADR_REG_HmiSW = 4512
-ADR_REG_HmiCW = 4513
-
-
 class ModbusTcpMaster(object):
 
     def __init__(self):
@@ -174,42 +164,34 @@ class ModbusTcpMaster(object):
 
 def call_back_entry_sp_enter(self) -> None:
     value_local = float(GUI.EntrySP_value.get())
-    PLC.write_multiple_holding_register_float32(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiSP,
-                                                register_value=value_local)
+    PLC.write_multiple_holding_register_float32(register_address=GV.ADR_REG_HmiSP, register_value=value_local)
     return
 
 
 def call_back_entry_op_enter(self) -> None:
     value_local = float(GUI.EntryOP_value.get())
-    PLC.write_multiple_holding_register_float32(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiOP,
-                                                register_value=value_local)
+    PLC.write_multiple_holding_register_float32(register_address=GV.ADR_REG_HmiOP, register_value=value_local)
     return
 
 
 def call_back_button_auto() -> None:
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=4)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=4)
     time.sleep(1.0)
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=0)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=0)
     return
 
 
 def call_back_button_manual() -> None:
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=2)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=2)
     time.sleep(1.0)
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=0)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=0)
     return
 
 
 def call_back_button_stop() -> None:
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=1)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=1)
     time.sleep(1.0)
-    PLC.write_multiple_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW,
-                                               register_value=0)
+    PLC.write_multiple_holding_register_uint16(register_address=GV.ADR_REG_HmiCW, register_value=0)
     return
 
 
@@ -226,29 +208,29 @@ def call_back_cyclic_time() -> None:
         GUI.EntryOP_value.set(float32_to_string(float32_value=GV.HmiOP, accuracy=2))
     if GV.HmiSW == 4:  #AUTO MODE
         GUI.ButtonAUTO.configure(bg='yellow')
-        GUI.EntryOP.configure(background=GUI._color_bg_1_)
+        GUI.EntryOP.configure(background=GUI.color_bg_1)
     else:
-        GUI.ButtonAUTO.configure(bg=GUI._color_bg_1_)
+        GUI.ButtonAUTO.configure(bg=GUI.color_bg_1)
         GUI.EntryOP.configure(background='white')
     if GV.HmiSW == 2:  #MANUAL MODE
         GUI.ButtonMANUAL.configure(bg='yellow')
     else:
-        GUI.ButtonMANUAL.configure(bg=GUI._color_bg_1_)
+        GUI.ButtonMANUAL.configure(bg=GUI.color_bg_1)
     if GV.HmiSW == 1:  #STOP MODE
         GUI.ButtonSTOP.configure(bg='yellow')
     else:
-        GUI.ButtonSTOP.configure(bg=GUI._color_bg_1_)
+        GUI.ButtonSTOP.configure(bg=GUI.color_bg_1)
     GUI.LabelMessage.configure(text=error_message())
     GUI.root.after(500, call_back_cyclic_time)  #delay call [ms].
     return
 
 
 def read_plc_tags() -> None:
-    GV.HmiSP = PLC.read_holding_register_float32(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiSP)
-    GV.HmiPV = PLC.read_holding_register_float32(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiPV)
-    GV.HmiOP = PLC.read_holding_register_float32(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiOP)
-    GV.HmiSW = PLC.read_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiSW)
-    GV.HmiCW = PLC.read_holding_register_uint16(modbus_address=MODBUS_ADR_PLC, register_address=ADR_REG_HmiCW)
+    GV.HmiSP = PLC.read_holding_register_float32(register_address=GV.ADR_REG_HmiSP)
+    GV.HmiPV = PLC.read_holding_register_float32(register_address=GV.ADR_REG_HmiPV)
+    GV.HmiOP = PLC.read_holding_register_float32(register_address=GV.ADR_REG_HmiOP)
+    GV.HmiSW = PLC.read_holding_register_uint16(register_address=GV.ADR_REG_HmiSW)
+    GV.HmiCW = PLC.read_holding_register_uint16(register_address=GV.ADR_REG_HmiCW)
     return
 
 
@@ -275,12 +257,18 @@ class GlobalVar(object):
         self.HmiSP_Prev = 0.0
         self.HmiPV_Prev = 0.0
         self.HmiOP_Prev = 0.0
+        self.ADR_REG_HmiSP = 4506
+        self.ADR_REG_HmiPV = 4508
+        self.ADR_REG_HmiOP = 4510
+        self.ADR_REG_HmiSW = 4512
+        self.ADR_REG_HmiCW = 4513
+        return
 
 
 class GlobalVarGui(object):
 
     def __init__(self) -> None:
-        self._color_bg_1_ = "#D4D0C8"
+        self.color_bg_1 = "#D4D0C8"
         self.root = tkinter.Tk()
         self.root.title("2PIRC16 PID control")
         self.root.resizable(False, False)
@@ -298,7 +286,7 @@ class GlobalVarGui(object):
         self.LabelSP.grid(column=1, row=0, sticky="w")
         # EntryPV
         self.EntryPV_value = tkinter.StringVar()
-        self.EntryPV = tkinter.Entry(self.FrameValue, background=self._color_bg_1_)
+        self.EntryPV = tkinter.Entry(self.FrameValue, background=self.color_bg_1)
         self.EntryPV.configure(textvariable=self.EntryPV_value)
         self.EntryPV.grid(column=0, row=1, sticky="w")
         # LabelPV
@@ -306,7 +294,7 @@ class GlobalVarGui(object):
         self.LabelPV.grid(column=1, row=1, sticky="w")
         # EntryOP
         self.EntryOP_value = tkinter.StringVar()
-        self.EntryOP = tkinter.Entry(self.FrameValue, background=self._color_bg_1_)
+        self.EntryOP = tkinter.Entry(self.FrameValue, background=self.color_bg_1)
         self.EntryOP.configure(textvariable=self.EntryOP_value)
         self.EntryOP.bind("<Return>", call_back_entry_op_enter)  # Press "Enter"
         self.EntryOP.grid(column=0, row=2, sticky="w")
@@ -342,7 +330,8 @@ if __name__ == "__main__":
     GV = GlobalVar()
     GUI = GlobalVarGui()
     PLC = ModbusTcpMaster()
-    PLC.start_tcp_client(ip_address=IP_ADR_PLC)
+    PLC.start_tcp_client(ip_address='192.168.1.84') # Connect to PLC
+    #PLC.start_tcp_client() # Connect to simulator
     read_plc_tags()
     GUI.EntrySP_value.set(float32_to_string(float32_value=GV.HmiSP, accuracy=2))
     GUI.EntryPV_value.set(float32_to_string(float32_value=GV.HmiPV, accuracy=2))
