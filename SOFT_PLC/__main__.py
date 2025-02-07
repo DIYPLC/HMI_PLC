@@ -37,7 +37,7 @@ class GlobalVar(object):
         try:
             self.rtc = Rtc()
         except BaseException as error:
-            write_to_error_file("ERROR GlobalVar __init__ Rtc()", error)
+            write_to_error_file("ERROR GlobalVar __init__ Rtc() " + str(error))
 
     def __call__(self) -> None:
         self.Reset = False
@@ -77,8 +77,8 @@ if __name__ == "__main__":
                 GV = GlobalVar()
                 main()
             except BaseException as error:
-                print("ERROR delay 10s", error)
-                write_to_error_file("ERROR __main__.py")
+                print("ERROR delay 10s ")
+                write_to_error_file("ERROR __main__.py " + str(error))
             time.sleep(10)  # second
 
 # @COPYLEFT ALL WRONGS RESERVED :)
