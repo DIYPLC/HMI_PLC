@@ -36,8 +36,8 @@ class GlobalVar(object):
         """ GLOBAL CLASS """
         try:
             self.rtc = Rtc()
-        except BaseException:
-            write_to_error_file("ERROR GlobalVar __init__ Rtc()")
+        except BaseException as error:
+            write_to_error_file("ERROR GlobalVar __init__ Rtc()", error)
 
     def __call__(self) -> None:
         self.Reset = False
@@ -76,8 +76,8 @@ if __name__ == "__main__":
                 write_to_error_file("OK SOFT PLC START")
                 GV = GlobalVar()
                 main()
-            except BaseException:
-                print("ERROR delay 10s")
+            except BaseException as error:
+                print("ERROR delay 10s", error)
                 write_to_error_file("ERROR __main__.py")
             time.sleep(10)  # second
 
