@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 GV = GlobalVar()
                 main()
             except BaseException as error:
-                print("ERROR delay 10s ")
+                print("ERROR delay 10s")
                 write_to_error_file("ERROR __main__.py " + str(error))
             time.sleep(10)  # second
 
