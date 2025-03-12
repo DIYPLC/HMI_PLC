@@ -26,9 +26,6 @@ class PLC_Allen_Bradley_link(object):
         plc_tag_value = plc_tag_struct[1]
         return plc_tag_value
     
-    def __call__(self) -> None:
-        return
-    
     def __del__(self) -> None:
         self.PLC.close()
         del self
