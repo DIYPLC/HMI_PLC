@@ -86,6 +86,16 @@ def auto_restart_plc() -> None:
     return
 
 
+def reboot_windows() -> None:
+    import os
+    import time
+    print("shutdown /r /f /t 60")
+    time.sleep(5*60)
+    os.system("shutdown /r /f /t 60") #60s delay
+    time.sleep(90)
+    return
+
+
 if __name__ == "__main__":
     try:
         write_to_error_file("OK SOFT PLC START")
