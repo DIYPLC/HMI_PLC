@@ -9,70 +9,14 @@ Ubuntu 20.04.6 LTS + Python 3.8.10
 08-04-2025
 """
 
-#import tkinter # TODO in ubuntu not work
 import time
-import socket,struct,array,ctypes
 import gc,importlib,os
-from RTC import Rtc
-from Write_to_Error_file import write_to_error_file
+import socket
+import threading
 
 
 def error_generator():
     return 0 / 0
-
-
-class GlobalVar(object):
-    
-    def __init__(self) -> None:
-        """ SYSTEM VARIABLES """
-        self.time_sample_ns = int(0)
-        self.Reset = bool(True)
-        self.Stop_PLC = bool(False)
-        return
-    
-    def __del__(self) -> None:
-        del self
-        return
-
-
-class Task_cyclic(object):
-    
-    def __init__(self) -> None:
-        self.time_sample_ns = int(0)
-        self.reset = bool(False)
-        self.user_timer_1_ns = int(0)
-        self.user_timer_1_s = float(0.0)
-        return
-    
-    def __call__(self) -> None:
-        self.user_timer_1_ns = self.user_timer_1_ns + self.time_sample_ns
-        self.user_timer_1_s = float(self.user_timer_1_ns / (10**9))
-        print("user_timer_1_s", self.user_timer_1_s)
-        return
-    
-    def __del__(self) -> None:
-        del self
-        return
-
-
-def main() -> None:  # GCC style.
-    rtc()
-    GV.time_sample_ns = rtc.time_sample_ns
-    GV.Reset = True
-    Task_cyclic1.time_sample_ns = GV.time_sample_ns
-    Task_cyclic1.reset = True
-    Task_cyclic1()
-    while True:
-        time.sleep(0.5)  # TODO DEBUG
-        rtc()
-        GV.time_sample_ns = rtc.time_sample_ns
-        GV.Reset = False
-        Task_cyclic1.time_sample_ns = GV.time_sample_ns
-        Task_cyclic1.reset = False
-        Task_cyclic1()
-        if GV.Stop_PLC:
-            write_to_error_file("OK SOFT PLC STOP")
-            break
 
 
 def auto_restart_plc() -> None:
@@ -96,24 +40,73 @@ def reboot_windows() -> None:
     return
 
 
+class InterProcessCommunication(object):
+    """ Shared memory for IPC """
+    
+    def __init__(self) -> None:
+        #print("IPC __init__()")
+        self.Stop_Thread1 = bool(True)
+        self.Stop_Task1 = bool(False)
+        return
+    
+    def __call__(self) -> None:
+        #print("IPC __call__()")
+        self.Thread1 = threading.Thread(target=FcThread1)
+        self.Thread1.start()
+        return
+    
+    def __enter__(self) -> None:
+        #print("IPC __enter__()")
+        return
+    
+    def __exit__(self) -> None:
+        #print("IPC __exit__()")
+        #self.__del__()
+        return
+   
+    def __del__(self) -> None:
+        #print("IPC __del__()")
+        del self
+        return
+
+
+def FcThread1(): # TODO
+    while True:
+        if IPC.Stop_Thread1:
+            break
+        time.sleep(5.0)
+        print("threading run")
+    return
+
+
 if __name__ == "__main__":
-    try:
-        write_to_error_file("OK SOFT PLC START")
-        rtc = Rtc()
-        GV = GlobalVar()
-        Task_cyclic1 = Task_cyclic()
-        main()
-    except BaseException as error:
-        print("ERROR delay")
-        write_to_error_file("ERROR __main__.py " + str(error))
-        del rtc
-        del GV
-        del Task_cyclic1
-        del main
-        importlib.reload(socket)
-        gc.collect()
-        time.sleep(5)
-        auto_restart_plc()
+    while True:
+        try:
+            from Write_to_Error_file import write_to_error_file
+            from Task1 import Task1
+            write_to_error_file("[OK] START __main__.py ")
+            IPC = InterProcessCommunication()
+            IPC()
+            DbTask1 = Task1()
+            DbTask1.setup()
+            while True:
+                DbTask1.loop()
+                if IPC.Stop_Task1:
+                    write_to_error_file("[ERR] STOP Task1.py")
+                    break
+        except BaseException as error:
+            print("[ERR] delay")
+            write_to_error_file("[ERR] __main__.py " + str(error))
+            IPC.Stop_Thread1 = True
+            time.sleep(10)
+            del DbTask1
+            del Task1
+            del IPC
+            importlib.reload(socket)
+            importlib.reload(threading)
+            gc.collect()
+            #auto_restart_plc()
+    print("[ERR] STOP __main__ " + time.strftime("%d-%b-%Y %H:%M:%S"))
 
 
 # @COPYLEFT ALL WRONGS RESERVED :)

@@ -7,7 +7,7 @@ def write_to_error_file(text: str = "text") -> None:
     # Записываем ошибки в файл если файл слишком большой стираем его и пишем в чистый файл.
     file_name = str("Error.txt")
     max_file_size_bytes = int(4096)
-    text = str(time.strftime("%d-%b-%Y %H:%M:%S") + ' ' + str(text) + '\n')
+    text = str(str(text) + ' ' + time.strftime("%d-%b-%Y %H:%M:%S"))
     try:  # Получить размер файла в байтах.
         file_size_bytes = os.path.getsize(file_name)
     except BaseException:  # если нет такого файла то размер его 0.
@@ -17,7 +17,7 @@ def write_to_error_file(text: str = "text") -> None:
     else:
         f = open(file_name, 'w')  # Записать в пустой файл.
     print(text)
-    f.write(text)
+    f.write(text  + '\n')
     f.close()
     return
 
