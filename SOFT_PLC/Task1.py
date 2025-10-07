@@ -34,7 +34,7 @@ class Task1(object):
     def __enter__(self) -> None: # with
         return
     
-    def __call__(self) -> None:
+    def __call__(self) -> None: # ()
         return
     
     def __exit__(self) -> None:

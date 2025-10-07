@@ -23,7 +23,7 @@ def auto_restart_plc() -> None:
     """" Этот метод работает но приводит к утечке памяти. """
     """ Возможно лучше перезагрузить OS. """
     print("auto_restart_plc()")
-    if (os.name == 'posix'):
+    if os.name == 'posix':
         os.system("python3 __main__.py")
     else: # os.name == 'nt'
         os.system("__main__.py")
@@ -51,7 +51,7 @@ class InterProcessCommunication(object):
     
     def __call__(self) -> None:
         #print("IPC __call__()")
-        self.Thread1 = threading.Thread(target=FcThread1)
+        self.Thread1 = threading.Thread(target=fc_thread1)
         self.Thread1.start()
         return
     
@@ -70,7 +70,7 @@ class InterProcessCommunication(object):
         return
 
 
-def FcThread1(): # TODO
+def fc_thread1(): # TODO
     while True:
         if IPC.Stop_Thread1:
             break

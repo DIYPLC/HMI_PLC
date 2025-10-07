@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import os
 
 def write_to_error_file(text: str = "text") -> None:
     # Записываем ошибки в файл если файл слишком большой стираем его и пишем в чистый файл.
