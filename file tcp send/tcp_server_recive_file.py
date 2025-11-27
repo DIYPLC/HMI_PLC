@@ -2,7 +2,6 @@
 TCP Server for receive file.
 https://techexpert.tips/python/python-file-transfer-using-sockets/
 """
-
 import socket
 
 
