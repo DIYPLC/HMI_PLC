@@ -50,6 +50,10 @@ except:
     #print("COPY FILE!!! C:\Windows\System32\snap7.dll C:\Windows\System32\snap7.lib")
     os.system("pip install python-snap7")
 
+print("Библиотека ftp server")
+print("pip3 install pyftpdlib")
+os.system("pip3 install pyftpdlib")
+
 input("press any key for exit...")
 
 # @COPYLEFT ALL WRONGS RESERVED :)
