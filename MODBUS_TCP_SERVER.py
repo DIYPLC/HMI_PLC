@@ -2,19 +2,19 @@
 # -*- coding: utf-8 -*-
 
 """
-MODBUS TCP SERVER
+Simple Modbus TCP server
+Modbus Slave == TCP server
+Modbus function 3  read holding registers uint16
+Modbus function 16 write multiple holding registers uint16
 Learn more at: http://www.modbus.org/
 http://www.binarytides.com/python-socket-server-code-example/
 """
 
-import socket  # FOR TCP SERVER
-import select  # FOR TCP SERVER
-import struct  # FOR MODBUS PROTOCOL
-import array  # FOR MODBUS PROTOCOL
+import socket  # for TCP server
+import select  # for TCP server
+import struct  # for MODBUS protocol
+import array  # for MODBUS protocol
 
-ip_address = "0.0.0.0"
-tcp_port = 502
-modbus_address = 1
 Register = array.array('H', [0] * 65536)  # holding Register
 
 
@@ -100,10 +100,10 @@ def modbus_tcp_server_fun_3(rx_adu=b'') -> bytes:
                 tx_adu = tx_adu + struct.pack(">H", value)
                 i = i + 1
         else:
-            print("ERROR FUN3")
+            print("[ERROR] modbus_tcp_server_fun_3()")
             tx_adu = error_function_not_supported(rx_adu)
     else:
-        print("ERROR LEN FUN3")
+        print("[ERROR] LEN modbus_tcp_server_fun_3()")
         tx_adu = error_function_not_supported(rx_adu)
     return tx_adu
 
@@ -138,12 +138,12 @@ def modbus_tcp_server_fun_16(rx_adu=b'') -> bytes:
             write_register(register_address=address, register_value=value)
             i = i + 1
     else:
-        print("ERROR FUN16")
+        print("[ERROR] modbus_tcp_server_fun_16()")
         tx_adu = error_function_not_supported(rx_adu)
     return tx_adu
 
 
-def protocol_modbus_tcp_server(rx_adu=b'') -> bytes:
+def protocol_modbus_tcp_server(rx_adu=b'', modbus_address=1) -> bytes:
     """ tx_adu = protocol_modbus_tcp_server(rx_adu) """
     rx_modbus_address = rx_adu[6]
     rx_modbus_function = rx_adu[7]
@@ -153,15 +153,15 @@ def protocol_modbus_tcp_server(rx_adu=b'') -> bytes:
         elif rx_modbus_function == 16:
             tx_adu = modbus_tcp_server_fun_16(rx_adu)
         else:
-            print("ERROR FUN NUMBER")
+            print("[ERROR] FUN NUMBER")
             tx_adu = error_function_not_supported(rx_adu)
     else:
-        print("ERROR MODBUS ADR")
+        print("[ERROR] MODBUS ADR")
         tx_adu = error_function_not_supported(rx_adu)
     return tx_adu
 
 
-def task_modbus_tcp_server():
+def task_modbus_tcp_server(ip_address="0.0.0.0", tcp_port=502, modbus_address=1):
     connection_list = []  # list of socket clients
     recv_buffer = 1024  # Byte receive buffer size
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
@@ -169,7 +169,7 @@ def task_modbus_tcp_server():
         server_socket.bind((ip_address, tcp_port))
         server_socket.listen(8)  # Number of TCP clients
         connection_list.append(server_socket)
-        print("TCP server started")
+        print("[OK] TCP server started")
         while True:
             # Get the list sockets which are ready to be read through select
             read_sockets, write_sockets, error_sockets = select.select(connection_list, [], [])
@@ -179,7 +179,7 @@ def task_modbus_tcp_server():
                     # Handle the case in which there is a new connection received through server_socket
                     sockfd, addr = server_socket.accept()
                     connection_list.append(sockfd)
-                    print("Client online", addr)
+                    print("[OK] Client online", addr)
                 # Some incoming message from a client
                 else:
                     # Data received from client, process it
@@ -187,12 +187,12 @@ def task_modbus_tcp_server():
                         # In Windows, sometimes when a TCP program closes abruptly,
                         # a "Connection reset by peer" exception will be thrown
                         rx_adu = sock.recv(recv_buffer)
-                        tx_adu = protocol_modbus_tcp_server(rx_adu)
+                        tx_adu = protocol_modbus_tcp_server(rx_adu=rx_adu, modbus_address=modbus_address)
                         if rx_adu:
                             sock.send(tx_adu)
                     # client disconnected, so remove from socket list
                     except BaseException as er:
-                        print("Client offline", addr, "BaseException:", er)
+                        print("[INFO] Client offline", addr, "BaseException:", er)
                         sock.close()
                         connection_list.remove(sock)
                         continue
@@ -201,7 +201,7 @@ def task_modbus_tcp_server():
 
 if __name__ == "__main__":
     # debug_test_init_registers()
-    task_modbus_tcp_server()
+    task_modbus_tcp_server(ip_address="0.0.0.0", tcp_port=502, modbus_address=1)
 
 # @COPYLEFT ALL WRONGS RESERVED :)
 # Author: VA

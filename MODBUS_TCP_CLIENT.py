@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Simple Modbus TCP Master
-Modbus Master == TCP Client
+Simple Modbus TCP client
+Modbus Master == TCP client
 Modbus function 3  read holding registers uint16
 Modbus function 16 write multiple holding registers uint16
 Modbus function 6  write single register
@@ -11,71 +11,86 @@ Modbus function 4  read one input register
 Learn more at: http://www.modbus.org/
 """
 
-import socket
-import struct
-import array
+import socket  # for TCP client
+import struct  # for MODBUS protocol
+import array  # for MODBUS protocol
 
 
 def modbus_tcp_client_read_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502,
                                                    modbus_address=1, register_address=0) -> int:
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    """ MODBUS TCP MASTER READ REGISTER FROM PLC """
     try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-            client_socket.connect((ip_address, tcp_port))
-            tx_transaction_id = 1
-            tx_protocol_id = 0
-            tx_message_length = 6
-            tx_modbus_address = modbus_address
-            tx_modbus_function = 3
-            tx_register_address = register_address
-            tx_register_count = 1
-            tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length,
-                                 tx_modbus_address, tx_modbus_function, tx_register_address, tx_register_count)
-            client_socket.send(tx_adu)
-            rx_adu = client_socket.recv(1500)
-            (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
-             rx_byte_count, rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
+
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        timeout_seconds = 1.0
+        client_socket.settimeout(timeout_seconds)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 1
+        tx_protocol_id = 0
+        tx_message_length = 6
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 3
+        tx_register_address = register_address
+        tx_register_count = 1
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length,
+                             tx_modbus_address, tx_modbus_function, tx_register_address, tx_register_count)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
+         rx_byte_count, rx_register_value) = struct.unpack(">HHHBBBH", rx_adu)
+        client_socket.close()
+        del client_socket
         return rx_register_value
-    except BaseException as er1:
-        print(er1)
-        print("ERROR: MODBUS_TCP_client_read_holding_register_uint16()")
+    except BaseException as er_modbus_tcp_client_read_holding_register_uint16:
+        print("[ERROR] modbus_tcp_client_read_holding_register_uint16()",
+              er_modbus_tcp_client_read_holding_register_uint16)
+        client_socket.close()
+        del client_socket
         return 0
 
 
 def modbus_tcp_client_write_multiple_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
                                                              register_address=0, register_value=0) -> None:
-    """MODBUS TCP MASTER WRITE REGISTER TO PLC"""
+    """ MODBUS TCP MASTER WRITE REGISTER TO PLC """
     try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-            client_socket.connect((ip_address, tcp_port))
-            tx_transaction_id = 0
-            tx_protocol_id = 0
-            tx_message_length = 9
-            tx_modbus_address = modbus_address
-            tx_modbus_function = 16  # Write multiple holding registers
-            tx_register_address = int(register_address) & 0xFFFF  # Limit address
-            tx_register_count = 1
-            tx_byte_count = 2
-            tx_register_value = int(register_value) & 0xFFFF  # Limit value
-            tx_adu = struct.pack(">HHHBBHHBH", tx_transaction_id, tx_protocol_id, tx_message_length,
-                                 tx_modbus_address, tx_modbus_function, tx_register_address, tx_register_count,
-                                 tx_byte_count, tx_register_value)
-            client_socket.send(tx_adu)
-            rx_adu = client_socket.recv(1500)
-            (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
-             rx_register_address, rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
-            return
-    except BaseException as er2:
-        print(er2)
-        print("ERROR: MODBUS_TCP_client_write_multiple_holding_register_uint16()")
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        timeout_seconds = 1.0
+        client_socket.settimeout(timeout_seconds)
+        client_socket.connect((ip_address, tcp_port))
+        tx_transaction_id = 0
+        tx_protocol_id = 0
+        tx_message_length = 9
+        tx_modbus_address = modbus_address
+        tx_modbus_function = 16  # Write multiple holding registers
+        tx_register_address = int(register_address) & 0xFFFF  # Limit address
+        tx_register_count = 1
+        tx_byte_count = 2
+        tx_register_value = int(register_value) & 0xFFFF  # Limit value
+        tx_adu = struct.pack(">HHHBBHHBH", tx_transaction_id, tx_protocol_id, tx_message_length,
+                             tx_modbus_address, tx_modbus_function, tx_register_address, tx_register_count,
+                             tx_byte_count, tx_register_value)
+        client_socket.send(tx_adu)
+        rx_adu = client_socket.recv(1500)
+        (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function,
+         rx_register_address, rx_register_count) = struct.unpack(">HHHBBHH", rx_adu)
+        client_socket.close()
+        del client_socket
+        return
+    except BaseException as er_modbus_tcp_client_write_multiple_holding_register_uint16:
+        print("[ERROR] modbus_tcp_client_write_multiple_holding_register_uint16()",
+              er_modbus_tcp_client_write_multiple_holding_register_uint16)
+        client_socket.close()
+        del client_socket
     return
 
 
 def modbus_tcp_client_read_input_register_int16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
                                                 register_address=0) -> int:
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    """ MODBUS TCP MASTER READ REGISTER FROM PLC """
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        timeout_seconds = 1.0
+        client_socket.settimeout(timeout_seconds)
         client_socket.connect((ip_address, tcp_port))
         tx_transaction_id = 1
         tx_protocol_id = 0
@@ -93,9 +108,9 @@ def modbus_tcp_client_read_input_register_int16(ip_address='127.0.0.1', tcp_port
         client_socket.close()
         del client_socket
         return rx_register_value
-    except BaseException as er3:
-        print(er3)
-        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+    except BaseException as er_modbus_tcp_client_read_input_register_int16:
+        print("[ERROR] modbus_tcp_client_read_input_register_int16()",
+              er_modbus_tcp_client_read_input_register_int16)
         client_socket.close()
         del client_socket
         return 0
@@ -103,9 +118,11 @@ def modbus_tcp_client_read_input_register_int16(ip_address='127.0.0.1', tcp_port
 
 def modbus_tcp_client_read_input_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
                                                  register_address=0) -> int:
-    """MODBUS TCP MASTER READ REGISTER FROM PLC"""
+    """ MODBUS TCP MASTER READ REGISTER FROM PLC """
     try:
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        timeout_seconds = 1.0
+        client_socket.settimeout(timeout_seconds)
         client_socket.connect((ip_address, tcp_port))
         tx_transaction_id = 1
         tx_protocol_id = 0
@@ -114,8 +131,8 @@ def modbus_tcp_client_read_input_register_uint16(ip_address='127.0.0.1', tcp_por
         tx_modbus_function = 4  # read_input_register
         tx_register_address = register_address
         tx_register_count = 1
-        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length, tx_modbus_address,
-                             tx_modbus_function, tx_register_address, tx_register_count)
+        tx_adu = struct.pack(">HHHBBHH", tx_transaction_id, tx_protocol_id, tx_message_length,
+                             tx_modbus_address, tx_modbus_function, tx_register_address, tx_register_count)
         client_socket.send(tx_adu)
         rx_adu = client_socket.recv(1500)
         (rx_transaction_id, rx_protocol_id, rx_message_length, rx_modbus_address, rx_modbus_function, rx_byte_count,
@@ -123,9 +140,9 @@ def modbus_tcp_client_read_input_register_uint16(ip_address='127.0.0.1', tcp_por
         client_socket.close()
         del client_socket
         return rx_register_value
-    except BaseException as er4:
-        print(er4)
-        print("ERROR: MODBUS_TCP_client_read_input_register_uint16()")
+    except BaseException as er_modbus_tcp_client_read_input_register_uint16:
+        print("[ERROR] modbus_tcp_client_read_input_register_uint16()",
+              er_modbus_tcp_client_read_input_register_uint16)
         client_socket.close()
         del client_socket
         return 0
@@ -140,7 +157,12 @@ class ModbusTcpMaster(object):
         return
 
     def start_tcp_client(self, ip_address='127.0.0.1', tcp_port=502) -> None:
-        self.client_socket.connect((ip_address, tcp_port))
+        try:
+            self.client_socket.connect((ip_address, tcp_port))
+            timeout_seconds = 1.0
+            self.client_socket.settimeout(timeout_seconds)
+        except BaseException as er_client_socket_connect:
+            print("[ERROR] client_socket.connect()", er_client_socket_connect)
         return
 
     def __del__(self) -> None:
@@ -192,12 +214,12 @@ class ModbusTcpMaster(object):
             if not error:
                 register_value = rx_register_value
             else:
-                print("error read holding register")
+                print("[ERROR] read holding register")
                 print(tx_adu)
                 print(rx_adu)
                 register_value = 0
         else:
-            print("error read holding register")
+            print("[ERROR] read holding register")
             print(tx_adu)
             print(rx_adu)
             register_value = 0
@@ -240,15 +262,16 @@ class ModbusTcpMaster(object):
             error = error or (rx_modbus_function != tx_modbus_function)
             error = error or (rx_byte_count != tx_register_count * 2)
             if not error:
-                decode_float32 = struct.unpack(">f", struct.pack(">HH", rx_register_value2, rx_register_value1))
+                decode_float32 = struct.unpack(">f",
+                                               struct.pack(">HH", rx_register_value2, rx_register_value1))
                 register_value = decode_float32[0]
             else:
-                print("error read holding register")
+                print("[ERROR] read holding register")
                 print(tx_adu)
                 print(rx_adu)
                 register_value = 0.0
         else:
-            print("error read holding register")
+            print("[ERROR] read holding register")
             print(tx_adu)
             print(rx_adu)
             register_value = 0.0
@@ -293,11 +316,11 @@ class ModbusTcpMaster(object):
             error = error or (rx_modbus_function != tx_modbus_function)
             error = error or (rx_register_count != tx_register_count)
             if error:
-                print("error write multiple holding register")
+                print("[ERROR] write multiple holding register")
                 print(tx_adu)
                 print(rx_adu)
         else:
-            print("error write multiple holding register")
+            print("[ERROR] write multiple holding register")
             print(tx_adu)
             print(rx_adu)
             error = True
@@ -315,7 +338,8 @@ class ModbusTcpMaster(object):
         tx_register_count = 2
         tx_byte_count = 4
         tx_register_value = register_value
-        (tx_register_value2, tx_register_value1) = struct.unpack(">HH", struct.pack(">f", register_value))
+        (tx_register_value2, tx_register_value1) = struct.unpack(">HH",
+                                                                 struct.pack(">f", register_value))
         tx_adu = struct.pack(">HHHBBHHBHH",
                              tx_transaction_id,
                              tx_protocol_id,
@@ -345,11 +369,11 @@ class ModbusTcpMaster(object):
             error = error or (rx_modbus_function != tx_modbus_function)
             error = error or (rx_register_count != tx_register_count)
             if error:
-                print("error write multiple holding register")
+                print("[ERROR] write multiple holding register")
                 print(tx_adu)
                 print(rx_adu)
         else:
-            print("error write multiple holding register")
+            print("[ERROR] write multiple holding register")
             print(tx_adu)
             print(rx_adu)
             error = True
@@ -374,11 +398,11 @@ class ModbusTcpMaster(object):
         if not error:
             error = (rx_adu != tx_adu)
             if error:
-                print("error write single register")
+                print("[ERROR] write single register")
                 print(tx_adu)
                 print(rx_adu)
         else:
-            print("error write single register")
+            print("[ERROR] write single register")
             print(tx_adu)
             print(rx_adu)
             error = True
@@ -420,9 +444,9 @@ class ModbusTcpMaster(object):
                     reg_adr = int(Counter + register_address) & 0xFFFF
                     self.MW[reg_adr] = register_value
             else:
-                print("error read holding register")
+                print("[ERROR] read holding register")
         else:
-            print("error read holding register")
+            print("[ERROR] read holding register")
         return
 
 
@@ -442,40 +466,40 @@ def _unit_test_() -> None:
     mw0 = modbus_tcp_client_read_holding_register_uint16(ip_address='127.0.0.1', tcp_port=502, modbus_address=1,
                                                          register_address=0)
     print("receive mw0 = ", mw0)
-    print("TEST 2")
-    print("TODO modbus_tcp_client_read_input_register_int16()")  # TODO
-    print("TODO modbus_tcp_client_read_input_register_uint16()")  # TODO
-    print("TODO ModbusTcpMaster.write_single_register()")  # TODO
-    plc1 = ModbusTcpMaster()
-    plc1.start_tcp_client(ip_address='127.0.0.1')
-    print("TEST 3")
-    mw1 = 777
-    print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
-    plc1.write_multiple_holding_register_uint16(register_address=1, register_value=mw1)
-    print("send mw1 =", mw1)
-    print("ModbusTcpMaster.read_holding_register_uint16()")
-    mw1 = plc1.read_holding_register_uint16(register_address=1)
-    print("receive mw1 =", mw1)
-    print("TEST 4")
-    mw2mw3 = -555.0
-    print("ModbusTcpMaster.write_multiple_holding_register_float32()")
-    plc1.write_multiple_holding_register_float32(register_address=2, register_value=mw2mw3)
-    print("send mw2mw3 =", mw2mw3)
-    print("ModbusTcpMaster.read_holding_register_float32()")
-    mw2mw3 = plc1.read_holding_register_float32(register_address=2)
-    print("receive mw2mw3 =", mw2mw3)
-    print("TEST 5")
-    print("ModbusTcpMaster.write_single_register()")
-    mw4 = 1234
-    mw5 = 4321
-    print("send mw4 =", mw4)
-    print("send mw5 =", mw5)
-    print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
-    plc1.write_multiple_holding_register_uint16(register_address=4, register_value=mw4)
-    plc1.write_multiple_holding_register_uint16(register_address=5, register_value=mw5)
-    plc1.read_holding_registers(register_address=4, register_count=2)
-    print("receive mw4 =", plc1.MW[4])
-    print("receive mw5 =", plc1.MW[5])
+    try:
+        print("TEST 2")
+        plc1 = ModbusTcpMaster()
+        plc1.start_tcp_client(ip_address='127.0.0.1')
+        mw1 = 777
+        print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
+        plc1.write_multiple_holding_register_uint16(register_address=1, register_value=mw1)
+        print("send mw1 =", mw1)
+        print("ModbusTcpMaster.read_holding_register_uint16()")
+        mw1 = plc1.read_holding_register_uint16(register_address=1)
+        print("receive mw1 =", mw1)
+        print("TEST 3")
+        mw2mw3 = -555.0
+        print("ModbusTcpMaster.write_multiple_holding_register_float32()")
+        plc1.write_multiple_holding_register_float32(register_address=2, register_value=mw2mw3)
+        print("send mw2mw3 =", mw2mw3)
+        print("ModbusTcpMaster.read_holding_register_float32()")
+        mw2mw3 = plc1.read_holding_register_float32(register_address=2)
+        print("receive mw2mw3 =", mw2mw3)
+        print("TEST 4")
+        print("ModbusTcpMaster.write_single_register()")
+        mw4 = 1234
+        mw5 = 4321
+        print("send mw4 =", mw4)
+        print("send mw5 =", mw5)
+        print("ModbusTcpMaster.write_multiple_holding_register_uint16()")
+        plc1.write_multiple_holding_register_uint16(register_address=4, register_value=mw4)
+        plc1.write_multiple_holding_register_uint16(register_address=5, register_value=mw5)
+        plc1.read_holding_registers(register_address=4, register_count=2)
+        print("receive mw4 =", plc1.MW[4])
+        print("receive mw5 =", plc1.MW[5])
+        del plc1
+    except BaseException as error:
+        print("[ERROR] ModbusTcpMaster()", error)
     input("press any key for exit...")
 
 
